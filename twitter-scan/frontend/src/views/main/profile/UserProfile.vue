@@ -15,6 +15,11 @@
           <div class="title primary--text text--darken-2" v-if="userProfile && userProfile.email">{{userProfile.email}}</div>
           <div class="title primary--text text--darken-2" v-else>-----</div>
         </div>
+        <div class="my-3">
+          <div class="subheading secondary--text text--lighten-3">Age</div>
+          <div class="title primary--text text--darken-2" v-if="userProfile && userProfile.age">{{userProfile.age}}</div>
+          <div class="title primary--text text--darken-2" v-else>-----</div>
+        </div>
       </v-card-text>
       <v-card-actions>
         <v-btn to="/main/profile/edit">Edit</v-btn>

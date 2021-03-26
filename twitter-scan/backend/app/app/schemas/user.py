@@ -9,6 +9,7 @@ class UserBase(BaseModel):
     is_active: Optional[bool] = True
     is_superuser: bool = False
     full_name: Optional[str] = None
+    age: Optional[int] = None
 
 
 # Properties to receive via API on creation
@@ -20,6 +21,7 @@ class UserCreate(UserBase):
 # Properties to receive via API on update
 class UserUpdate(UserBase):
     password: Optional[str] = None
+    age: Optional[int] = None
 
 
 class UserInDBBase(UserBase):
