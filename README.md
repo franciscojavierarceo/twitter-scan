@@ -10,4 +10,15 @@ These are the goals of this project:
 4. Have the model auto-update based on feedback (this is a maybe and I'd probably schedule it)
 5. Deploy the application on Docker Swarm
 
-Let's see how it goes.
+# Building Locally
+
+To build this repository locally cd into the subfolder `twitter-scan` that was built from Fast's cookiecutter template, then simply run:
+
+```
+docker-compose up --build
+```
+
+After the container is built you can then just run the line below to have the serve run as a background task.
+```
+docker-compose up -d
+```
