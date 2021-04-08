@@ -188,7 +188,7 @@ To run the tests in a running stack with coverage HTML reports:
 
 ```bash
 docker-compose exec backend bash /app/tests-start.sh --cov-report=html
-```
+`Email``
 
 ### Live development with Python Jupyter Notebooks
 
