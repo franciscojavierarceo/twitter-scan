@@ -12,7 +12,7 @@ These are the goals of this project:
 
 # Building Locally
 
-As a first step, you need to generate a environment file located `./twitter-scan/.env`, the subfolder in this repository. It will look like: 
+As a first step, you need to generate a environment file located `./twitter-scan/.env`, the subfolder in this repository. It will look like:
 
 ```.env
 DOMAIN=localhost
@@ -68,6 +68,7 @@ TWITTER_API_SECRET=
 To build this repository locally cd into the subfolder `twitter-scan` that was built from Fast's cookiecutter template, then simply run:
 
 ```
+cd twitter-scan/
 docker-compose up --build
 ```
 
