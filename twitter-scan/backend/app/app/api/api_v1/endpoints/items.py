@@ -25,6 +25,7 @@ def read_items(
         items = crud.item.get_multi_by_owner(
             db=db, owner_id=current_user.id, skip=skip, limit=limit
         )
+        print('\nthis is also a test\n')
     return items
 
 
@@ -38,7 +39,23 @@ def create_item(
     """
     Create new item.
     """
-    item = crud.item.create_with_owner(db=db, obj_in=item_in, owner_id=current_user.id)
+    print('helloooo')
+    try:
+        luv = item_in.title
+    except:
+        luv = None
+    print(luv)
+
+    #item_lu = crud.item.get(db=db, title=luv)
+    #if item_lu is not None:
+    #    print('found')
+    #    return item_lu
+    #print('not found')
+    print(current_user.email)
+    item = crud.item.create_with_owner(db=db, 
+            obj_in=item_in, 
+            owner_id=current_user.id,
+            username = str(current_user.email))
     return item
 
 

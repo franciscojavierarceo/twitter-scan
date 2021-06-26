@@ -11,6 +11,7 @@ if TYPE_CHECKING:
 
 class Item(Base):
     id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, primary_key=False, index=True, default=None)
     title = Column(String, index=True)
     description = Column(String, index=True)
     owner_id = Column(Integer, ForeignKey("user.id"))
