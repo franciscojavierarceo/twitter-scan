@@ -7,6 +7,7 @@ from pydantic import BaseModel
 class ItemBase(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
+    username: Optional[str] = None
 
 
 # Properties to receive on item creation
@@ -24,6 +25,7 @@ class ItemInDBBase(ItemBase):
     id: int
     title: str
     owner_id: int
+    username: str
 
     class Config:
         orm_mode = True
