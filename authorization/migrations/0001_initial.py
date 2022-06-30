@@ -15,23 +15,51 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='TwitterAuthToken',
+            name="TwitterAuthToken",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('oauth_token', models.CharField(max_length=255)),
-                ('oauth_token_secret', models.CharField(max_length=255)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("oauth_token", models.CharField(max_length=255)),
+                ("oauth_token_secret", models.CharField(max_length=255)),
             ],
         ),
         migrations.CreateModel(
-            name='TwitterUser',
+            name="TwitterUser",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('twitter_id', models.CharField(max_length=255)),
-                ('screen_name', models.CharField(max_length=255)),
-                ('name', models.CharField(max_length=255)),
-                ('profile_image_url', models.CharField(max_length=255, null=True)),
-                ('twitter_oauth_token', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='authorization.twitterauthtoken')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("twitter_id", models.CharField(max_length=255)),
+                ("screen_name", models.CharField(max_length=255)),
+                ("name", models.CharField(max_length=255)),
+                ("profile_image_url", models.CharField(max_length=255, null=True)),
+                (
+                    "twitter_oauth_token",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="authorization.twitterauthtoken",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]
