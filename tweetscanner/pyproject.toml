@@ -7,6 +7,8 @@ authors = ["franciscojavierarceo <arceofrancisco@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.7"
 Django = "3.2.13"
+poetry-dotenv-plugin = "^0.1.0-alpha.2"
+python-dotenv = {extras = ["cli"], version = "^0.20.0"}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
