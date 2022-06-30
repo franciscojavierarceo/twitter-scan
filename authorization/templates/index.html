@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tweet Verita</title>
+</head>
+<body>
+    <h1>Welcome</h1>
+    <p>
+        <p>Django user database id: {{ user.id }}</p>
+        <p>Django username: {{ user.username }}</p>
+        <p>User is authenticated: {{ user.is_authenticated }}</p>
+        <p>User is active: {{ user.is_active }}</p>
+        <p>User last login: {{ user.last_login }}</p>
+        <p>User date joined: {{ user.date_joined }}</p>
+        <p>User first name: {{ user.first_name }}</p>
+        <a href="{% url 'twitter_logout' %}">Logout</a>
+    </p>
+</body>
+</html>
