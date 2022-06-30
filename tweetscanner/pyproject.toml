@@ -9,6 +9,9 @@ python = "^3.7"
 Django = "3.2.13"
 poetry-dotenv-plugin = "^0.1.0-alpha.2"
 python-dotenv = {extras = ["cli"], version = "^0.20.0"}
+dj-database-url = "^0.5.0"
+psycopg2-binary = "^2.9.3"
+whitenoise = {extras = ["brotli"], version = "^6.2.0"}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
