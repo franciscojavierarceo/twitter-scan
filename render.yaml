@@ -1,4 +1,4 @@
-tabases:
+databases:
   - name: tweetscanner
     databaseName: tweetscanner
     user: tweetscanner
