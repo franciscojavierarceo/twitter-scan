@@ -1,6 +1,15 @@
-{% extends "render/base.html" %}
+{% comment %} {% extends "render/base.html" %}
 
-{% block maincontent %}
+{% block maincontent %} {% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tweet Verita</title>
+</head>
+<body>
+
     <p>
         <p>Django user database id: {{ user.id }}</p>
         <p>Django username: {{ user.username }}</p>
@@ -12,5 +21,6 @@
         <a href="{% url 'twitter_logout' %}">Logout</a>
         <a href="{% url 'home' %}">Homepage</a>
     </p>
-
-{% endblock%}
+</body>
+</html>
+{% comment %} {% endblock%} {% endcomment %}

@@ -1,6 +1,14 @@
-{% extends "render/base.html" %}
+{% comment %} {% extends "render/base.html" %}
 
-{% block maincontent %}
+{% block maincontent %} {% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tweet Verita</title>
+</head>
+<body>
 
 {% if messages %}
 <ul class="messages">
@@ -11,4 +19,6 @@
 {% endif %}
         <a href="{% url 'twitter_login' %}">Login</a>
 
-{% endblock %}
+</body>
+</html>
+{% comment %} {% endblock %} {% endcomment %}
