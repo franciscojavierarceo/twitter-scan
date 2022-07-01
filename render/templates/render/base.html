@@ -16,7 +16,7 @@
         {% include "render/_header.html" %}
         </div>
             <div class="px-4 py-5 my-5 text-center">
-                {% if user.username is not none%}
+                {% if {{ user.username }} is not none%}
                     <h1 class="display-5 fw-bold">Hello there, {{user.username}}! 👋</h1>
                     {% block maincontent %} {% endblock %}
                 {% else %} 
