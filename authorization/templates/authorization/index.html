@@ -9,7 +9,6 @@
     <title>Tweet Verita</title>
 </head>
 <body>
-
     <p>
         <p>Django user database id: {{ user.id }}</p>
         <p>Django username: {{ user.username }}</p>
@@ -19,7 +18,7 @@
         <p>User date joined: {{ user.date_joined }}</p>
         <p>User first name: {{ user.first_name }}</p>
         <a href="{% url 'twitter_logout' %}">Logout</a>
-        <a href="{% url 'home' %}">Homepage</a>
+        <a href="{% url 'homepage' %}">Homepage</a>
     </p>
 </body>
 </html>
