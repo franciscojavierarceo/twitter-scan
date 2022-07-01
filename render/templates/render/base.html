@@ -17,7 +17,7 @@
         </div>
             <div class="px-4 py-5 my-5 text-center">
                 {% if user.is_authenticated %}
-                    <h1 class="display-5 fw-bold">Hello there, {{user.username}}! 👋</h1>
+                    <h1 class="display-5 fw-bold">Hello there, {{user.first_name}}! 👋</h1>
                     {% block maincontent %} {% endblock %}
                 {% else %} 
                     <h1 class="display-5 fw-bold">Hello there! 👋</h1>
