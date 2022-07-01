@@ -9,7 +9,6 @@ from twitter_api.twitter_api import TwitterAPI
 from .forms import TwitterUsernameForm
 from django.http import HttpResponseRedirect
 
-# Create your views here.
 def twitter_login(request):
     print('calling twitter api')
     twitter_api = TwitterAPI()

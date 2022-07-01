@@ -2,14 +2,6 @@
 
 {% block maincontent %} 
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Tweet Verita</title>
-</head>
-<body>
-
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
@@ -19,6 +11,4 @@
 {% endif %}
         <a href="{% url 'twitter_login' %}">Login</a>
 
-</body>
-</html>
 {% endblock %}

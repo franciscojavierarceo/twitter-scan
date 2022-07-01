@@ -144,7 +144,7 @@ if not DEBUG:
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-LOGIN_URL = "/authorization/twitter_login/"
+LOGIN_URL = "/twitter_login/"
 
 SERVER_EMAIL = os.environ.get("SERVER_EMAIL", "admin@example.com")
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
