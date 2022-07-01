@@ -1,16 +1,15 @@
 {% extends "render/base.html" %}
 
-{% block maincontent %} 
-
-    <p>
-        <p>Django user database id: {{ user.id }}</p>
-        <p>Django username: {{ user.username }}</p>
-        <p>User is authenticated: {{ user.is_authenticated }}</p>
-        <p>User is active: {{ user.is_active }}</p>
-        <p>User last login: {{ user.last_login }}</p>
-        <p>User date joined: {{ user.date_joined }}</p>
-        <p>User first name: {{ user.first_name }}</p>
-        <a href="{% url 'twitter_logout' %}">Logout</a>
-        <a href="{% url 'homepage' %}">Homepage</a>
-    </p>
+{% block maincontent %}
+    <p class="lead mb-4">Welcome, {{user.first_name }}!</p>
+    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+    <ul>
+        <li><p>Django user database id: {{ user.id }}</p></li>
+        <li><p>Django username: {{ user.username }}</p></li>
+        <li><p>User is authenticated: {{ user.is_authenticated }}</p></li>
+        <li><p>User first name: {{ user.first_name }}</p></li>
+        <li><a href="{% url 'twitter_logout' %}">Logout</a></li>
+        <li><a href="{% url 'homepage' %}">Homepage</a></li>
+    </ul>
+    </div>
 {% endblock%}
