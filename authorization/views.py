@@ -6,7 +6,8 @@ from .decorators import twitter_login_required
 from .models import TwitterAuthToken, TwitterUser
 from .authorization import create_update_user_from_twitter, check_token_still_valid
 from twitter_api.twitter_api import TwitterAPI
-
+from .forms import TwitterUsernameForm
+from django.http import HttpResponseRedirect
 
 # Create your views here.
 def twitter_login(request):
@@ -70,10 +71,25 @@ def twitter_callback(request):
 @login_required
 @twitter_login_required
 def index(request):
-    return render(request, "authorization/index.html")
+    if request.method == 'POST':
+        form = TwitterUsernameForm(request.POST)
+        if form.is_valid():
+            print(form)
+            form.save()
+            return redirect("thankyou")
+    else:
+        form = TwitterUsernameForm()
+        
+    return render(request, 'authorization/index.html', {'form': form})
 
 
 @login_required
 def twitter_logout(request):
     logout(request)
     return redirect("index")
+
+
+@login_required
+def thank_you(request):
+    return render(request, 'authorization/thankyou.html')
+
