@@ -1,5 +1,11 @@
 from django import forms
+from .models import TwitterUserSearched
 
 
-class TwitterUsernameForm(forms.Form):
-    twitter_username = forms.CharField(label='Twitter Username', max_length=20, required=False)
+class TwitterUsernameForm(forms.ModelForm):
+    class Meta:
+        model = TwitterUserSearched
+        fields = [
+            "twitter_username",
+        ]
+        labels = [""]

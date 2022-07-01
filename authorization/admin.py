@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import TwitterAuthToken, TwitterUser, TwitterUserSearched
 
-# Register your models here.
+
+admin.site.register(TwitterUserSearched)
+admin.site.register(TwitterAuthToken)
+admin.site.register(TwitterUser)

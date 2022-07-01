@@ -1,3 +1,4 @@
+from re import I
 from django.db import models
 
 # Create your models here.
@@ -19,3 +20,11 @@ class TwitterUser(models.Model):
 
     def __str__(self):
         return self.screen_name
+
+
+class TwitterUserSearched(models.Model):
+    twitter_username = models.CharField(max_length=255)
+    submitter_user = models.ForeignKey(TwitterUser, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return f"{self.twitter_username} - {self.submitter_user}"

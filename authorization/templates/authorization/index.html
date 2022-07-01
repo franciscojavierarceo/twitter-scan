@@ -1,13 +1,15 @@
 {% extends "render/base.html" %}
 
 {% block maincontent %}
-    <p class="lead mb-4">Welcome, {{user.first_name }}!</p>
-    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-    <ul>
-        <li><p>User is authenticated: {{ user.is_authenticated }}</p></li>
-        <li><p>User first name: {{ user.first_name }}</p></li>
-        <li><a href="{% url 'twitter_logout' %}">Logout</a></li>
-        <li><a href="{% url 'index' %}">Homepage</a></li>
-    </ul>
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">Enter the Twitter Username you want to scan!</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        {% load crispy_forms_tags %}
+        <form method="post">
+          {% csrf_token %}
+              {{form|crispy}}
+            <input type="submit" class="w-75 btn btn-lg btn-outline-primary justify-content-center" value="Scan the Twitters">
+          </form>
+        </div>
     </div>
 {% endblock%}

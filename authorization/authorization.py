@@ -38,10 +38,10 @@ def check_token_still_valid(twitter_user):
     twitter_api = TwitterAPI()
     try:
         info = twitter_api.get_me(
-        twitter_user.twitter_oauth_token.oauth_token,
-        twitter_user.twitter_oauth_token.oauth_token_secret,
-    )
+            twitter_user.twitter_oauth_token.oauth_token,
+            twitter_user.twitter_oauth_token.oauth_token_secret,
+        )
     except Exception as e:
-        print(f'unable to get oauth cred error:\n{e}')
-        return 
+        print(f"unable to get oauth cred error:\n{e}")
+        return
     return info
