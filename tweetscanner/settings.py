@@ -37,7 +37,6 @@ if RENDER_EXTERNAL_HOSTNAME:
 
 INSTALLED_APPS = [
     "authorization.apps.AuthorizationConfig",
-    "render.apps.RenderConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
