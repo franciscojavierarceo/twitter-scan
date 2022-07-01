@@ -4,8 +4,6 @@
     <p class="lead mb-4">Welcome, {{user.first_name }}!</p>
     <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
     <ul>
-        <li><p>Django user database id: {{ user.id }}</p></li>
-        <li><p>Django username: {{ user.username }}</p></li>
         <li><p>User is authenticated: {{ user.is_authenticated }}</p></li>
         <li><p>User first name: {{ user.first_name }}</p></li>
         <li><a href="{% url 'twitter_logout' %}">Logout</a></li>

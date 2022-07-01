@@ -13,22 +13,20 @@
     </head>
     <body class="d-flex flex-column h-100">
         <main class="flex-shrink-0 container">
+        {% include "render/_header.html" %}
+        </div>
             <div class="px-4 py-5 my-5 text-center">
-                <h1 class="display-5 fw-bold">Hello there! 👋</h1>
+                <h1 class="display-5 fw-bold">Hello there, {{user.username}}! 👋</h1>
                 <div class="col-lg-6 mx-auto">
-                    {% block maincontent %}
                     <p class="lead mb-4">Sign in to Scan public twitter profiles for toxic tweets!</p>
                     <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
                         <a type="button" class="btn btn-primary btn-lg px-4 gap-3" href="{% url 'index' %}">Login with Twitter</a>
                     </div>
+                    {% block maincontent %}
                     {% endblock %}
                 </div>
             </div>
         </main>
-        <footer class="footer mt-auto py-3 bg-light">
-            <div class="container">
-                <span class="text-muted">Built with ☕ by <a href=https://twitter.com/franciscojarceo>francisco</a></span>
-            </div>
-        </footer>
+        {% include "render/_footer.html" %}
     </body>
 </html>
