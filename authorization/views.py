@@ -11,6 +11,7 @@ from django.http import HttpResponseRedirect
 
 # Create your views here.
 def twitter_login(request):
+    print('calling twitter api')
     twitter_api = TwitterAPI()
     url, oauth_token, oauth_token_secret = twitter_api.twitter_login()
     if url is None or url == "":
@@ -30,6 +31,8 @@ def twitter_login(request):
         else:
             twitter_auth_token.oauth_token_secret = oauth_token_secret
             twitter_auth_token.save()
+        
+        print(f'redirecting to {url}')
         return redirect(url)
 
 
