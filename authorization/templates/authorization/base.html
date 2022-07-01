@@ -13,7 +13,7 @@
     </head>
     <body class="d-flex flex-column h-100">
         <main class="flex-shrink-0 container">
-        {% include "render/_header.html" %}
+        {% include "authorization/_header.html" %}
         </div>
             <div class="px-4 py-5 my-5 text-center">
                 {% if user.is_authenticated %}
@@ -30,6 +30,6 @@
                 {% endif %} 
             </div>
         </main>
-        {% include "render/_footer.html" %}
+        {% include "authorization/_footer.html" %}
     </body>
 </html>
