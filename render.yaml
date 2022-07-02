@@ -18,5 +18,15 @@ services:
         generateValue: true
       - key: WEB_CONCURRENCY
         value: 4
-
-
+  - type: worker
+    name: queue
+    region: ohio
+    env: python
+    buildCommand: "poetry install"
+    startCommand: "celery --app tasks worker --loglevel info --concurrency 4"
+    envVars:
+      - key: CELERY_BROKER_URL
+        fromService:
+          name: celery-redis
+          type: redis
+          property: connectionString
