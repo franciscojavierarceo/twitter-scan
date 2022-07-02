@@ -3,10 +3,10 @@
 {% block maincontent %}
 
     <div class="col-lg-6 mx-auto">
-        <p class="lead mb-4">Thank you!</p>
-        <ol>
+        <p class="lead mb-4">Here's a list of the twitter users you've searched.</p>
+        <ol class="list-group list-group-flush">
             {% for row in results %}
-            <li> {{ row.twitter_username }} </li>
+            <li class="list-group-item"> @{{ row.twitter_username }} </li>
             {% endfor %}
         </ol>
     </div>
