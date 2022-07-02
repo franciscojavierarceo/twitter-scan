@@ -1,7 +1,6 @@
 from re import I
 from django.db import models
 
-# Create your models here.
 class TwitterAuthToken(models.Model):
     oauth_token = models.CharField(max_length=255)
     oauth_token_secret = models.CharField(max_length=255)
