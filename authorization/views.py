@@ -3,12 +3,12 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .decorators import twitter_login_required
-from .models import TwitterAuthToken, TwitterUser
+from .models import TwitterAuthToken, TwitterUser, TwitterUserSearched
 from .authorization import create_update_user_from_twitter, check_token_still_valid
 from twitter_api.twitter_api import TwitterAPI
 from .forms import TwitterUsernameForm
 from django.http import HttpResponseRedirect
-
+from django.utils import timezone
 
 def twitter_login(request):
     print("calling twitter api")
@@ -101,14 +101,32 @@ def twitter_callback(request):
 @twitter_login_required
 def index(request):
     if request.method == "POST":
-        print(request.POST)
-        form = TwitterUsernameForm(request.POST)
-        if form.is_valid():
-            model_saved = form.save()
-            model_saved.submitter_user = TwitterUser.objects.get(user=request.user)
-            model_saved.save()
-
+        dtz = timezone.now()
+        curr_user = TwitterUser.objects.get(user=request.user)
+        tuser = request.POST.get('twitter_username', None)
+        print(curr_user, tuser)
+        db_recs = TwitterUserSearched.objects.filter(
+            twitter_username=tuser,
+            submitter_user=curr_user,
+        )
+        if db_recs.count() > 0:
+            print(f"{db_recs.count()} records found")
+            db_rec = db_recs.last()
+            db_rec.updated_date = dtz
+            db_rec.save()
+            
             return redirect("thankyou")
+        else:
+            print("no records found")
+            form = TwitterUsernameForm(request.POST)
+            if form.is_valid():
+                model_saved = form.save()
+                model_saved.submitter_user = curr_user 
+                model_saved.created_date = dtz
+                model_saved.updated_date = dtz
+                model_saved.save()
+
+                return redirect("thankyou")
     else:
         form = TwitterUsernameForm()
 

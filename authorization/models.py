@@ -23,6 +23,8 @@ class TwitterUser(models.Model):
 
 
 class TwitterUserSearched(models.Model):
+    created_date = models.DateTimeField(null=True)
+    updated_date = models.DateTimeField(null=True)
     twitter_username = models.CharField(max_length=255)
     submitter_user = models.ForeignKey(TwitterUser, on_delete=models.CASCADE, null=True)
 
