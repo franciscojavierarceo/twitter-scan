@@ -7,10 +7,11 @@
           </a>
 
           <ul class="nav nav-pills">
-            <li class="nav-item"><a href="{% url 'index' %}" class="nav-link active" aria-current="page">Home</a></li>
             {% if user.is_authenticated %}
+            <li class="nav-item"><a href="{% url 'index' %}" class="nav-link active" aria-current="page">Search</a></li>
               <li class="nav-item"><a href="{% url 'twitter_logout' %}" class="nav-link">Logout</a></li>
             {% else %} 
+            <li class="nav-item"><a href="{% url 'index' %}" class="nav-link active" aria-current="page">Home</a></li>
             {% endif %}
           </ul>
         </header>

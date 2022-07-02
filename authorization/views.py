@@ -115,7 +115,7 @@ def index(request):
             db_rec.updated_date = dtz
             db_rec.save()
             
-            return redirect("thankyou")
+            return redirect("results")
         else:
             print("no records found")
             form = TwitterUsernameForm(request.POST)
@@ -126,7 +126,7 @@ def index(request):
                 model_saved.updated_date = dtz
                 model_saved.save()
 
-                return redirect("thankyou")
+                return redirect("results")
     else:
         form = TwitterUsernameForm()
 
@@ -140,5 +140,9 @@ def twitter_logout(request):
 
 
 @login_required
-def thank_you(request):
-    return render(request, "authorization/thankyou.html")
+def results(request):
+    curr_user = TwitterUser.objects.get(user=request.user)
+    results = TwitterUserSearched.objects.filter(
+        submitter_user=curr_user,
+    )
+    return render(request, "authorization/results.html", {'results': results})

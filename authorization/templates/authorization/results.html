@@ -4,6 +4,11 @@
 
     <div class="col-lg-6 mx-auto">
         <p class="lead mb-4">Thank you!</p>
+        <ol>
+            {% for row in results %}
+            <li> {{ row.twitter_username }} </li>
+            {% endfor %}
+        </ol>
     </div>
 
 {% endblock %}
