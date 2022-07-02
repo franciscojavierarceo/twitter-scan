@@ -1,6 +1,7 @@
 from re import I
 from django.db import models
 
+
 class TwitterAuthToken(models.Model):
     oauth_token = models.CharField(max_length=255)
     oauth_token_secret = models.CharField(max_length=255)
@@ -29,3 +30,15 @@ class TwitterUserSearched(models.Model):
 
     def __str__(self):
         return f"{self.twitter_username} - {self.submitter_user}"
+
+
+class Tweet(models.Model):
+    tweet_id = models.BigIntegerField(null=True)
+    created_date = models.DateTimeField(null=True)
+    tweet_date = models.DateTimeField(null=True)
+    twitter_username = models.CharField(max_length=255)
+    tweet_text = models.CharField(max_length=500, null=True)
+    toxicity_score = models.FloatField(null=True)
+
+    def __str__(self):
+        return f"{self.tweet_id}"

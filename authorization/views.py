@@ -10,6 +10,7 @@ from .forms import TwitterUsernameForm
 from django.http import HttpResponseRedirect
 from django.utils import timezone
 
+
 def twitter_login(request):
     print("calling twitter api")
     try:
@@ -103,7 +104,7 @@ def index(request):
     if request.method == "POST":
         dtz = timezone.now()
         curr_user = TwitterUser.objects.get(user=request.user)
-        tuser = request.POST.get('twitter_username', None)
+        tuser = request.POST.get("twitter_username", None)
         print(curr_user, tuser)
         db_recs = TwitterUserSearched.objects.filter(
             twitter_username=tuser,
@@ -114,14 +115,14 @@ def index(request):
             db_rec = db_recs.last()
             db_rec.updated_date = dtz
             db_rec.save()
-            
+
             return redirect("results")
         else:
             print("no records found")
             form = TwitterUsernameForm(request.POST)
             if form.is_valid():
                 model_saved = form.save()
-                model_saved.submitter_user = curr_user 
+                model_saved.submitter_user = curr_user
                 model_saved.created_date = dtz
                 model_saved.updated_date = dtz
                 model_saved.save()
@@ -145,4 +146,4 @@ def results(request):
     results = TwitterUserSearched.objects.filter(
         submitter_user=curr_user,
     )
-    return render(request, "authorization/results.html", {'results': results})
+    return render(request, "authorization/results.html", {"results": results})

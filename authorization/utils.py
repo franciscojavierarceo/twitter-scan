@@ -1,21 +1,29 @@
+from curses.ascii import HT
 import os
 import re
 import tweepy
-import pandas as pd
-from detoxify import Detoxify
+from django.utils import timezone
+from datetime import datetime
 
-TWITTER_API_KEY = os.environ.get('TWITTER_API_KEY')
-TWITTER_API_SECRET = os.environ.get('TWITTER_API_SECRET')
+# import pandas as pd
+from django.http import HttpResponse
+from detoxify import Detoxify
+from authorization.models import Tweet
+
+model = Detoxify("original")
+TWITTER_API_KEY = os.environ.get("TWITTER_API_KEY")
+TWITTER_API_SECRET = os.environ.get("TWITTER_API_SECRET")
 auth = tweepy.OAuthHandler(TWITTER_API_KEY, TWITTER_API_SECRET)
+# auth = tweepy.OAuth2BearerHandler(os.environ.get("TWITTER_API_BEARER_TOKEN"))
 api = tweepy.API(auth)
 
 
 def get_all_tweets(screen_name: str) -> list:
     # initialize a list to hold all the tweepy Tweets
-    alltweets = []  
+    alltweets = []
 
     # make initial request for most recent tweets (200 is the maximum allowed count)
-    new_tweets = api.user_timeline(screen_name = screen_name, count=200)
+    new_tweets = api.user_timeline(screen_name=screen_name, count=200)
 
     # save most recent tweets
     alltweets.extend(new_tweets)
@@ -27,7 +35,9 @@ def get_all_tweets(screen_name: str) -> list:
     while len(new_tweets) > 0:
         print(f"getting tweets before {oldest}")
         # all subsequent requests use the max_id param to prevent duplicates
-        new_tweets = api.user_timeline(screen_name = screen_name,count=200, max_id=oldest)
+        new_tweets = api.user_timeline(
+            screen_name=screen_name, count=200, max_id=oldest
+        )
         # save most recent tweets
         alltweets.extend(new_tweets)
         # update the id of the oldest tweet less one
@@ -36,10 +46,11 @@ def get_all_tweets(screen_name: str) -> list:
 
     return alltweets
 
+
 def clean_tweet(x: str) -> str:
     try:
-        clean = re.sub("@[A-Za-z0-9_]+","", x).strip()
-        replytweet = re.match('… https://t.co/*', clean)
+        clean = re.sub("@[A-Za-z0-9_]+", "", x).strip()
+        replytweet = re.match("… https://t.co/*", clean)
         if replytweet is not None:
             if replytweet.end() > 0:
                 return None
@@ -47,3 +58,47 @@ def clean_tweet(x: str) -> str:
     except Exception as e:
         print(e)
         return x
+
+
+def clean_tweets(tweets: list) -> list:
+    res = []
+    for i in tweets:
+        if i._json["in_reply_to_status_id"] is not None:
+            cleaned = clean_tweet(i._json["text"])
+            res.append(
+                (
+                    i._json["id"],
+                    i._json["created_at"],
+                    i._json["text"],
+                    cleaned,
+                )
+            )
+    return res
+
+
+def score_and_save_tweets(screen_name: str, tweets: list) -> None:
+    for tweet in tweets:
+        tweet_score = model.predict(tweet[3])["toxicity"]
+        db_tweet = Tweet(
+            created_date=timezone.now(),
+            tweet_id=tweet[0],
+            twitter_username=screen_name,
+            tweet_text=tweet[1],
+            tweet_date=tweet[2],
+            toxicity_score=tweet_score,
+        )
+        db_tweet.save()
+
+
+def fetch_and_store_tweets(screen_name: str) -> HttpResponse:
+    response = HttpResponse()
+    try:
+        tweets = get_all_tweets(screen_name=screen_name)
+        tweets = clean_tweets(tweets)
+        score_and_save_tweets(tweets)
+        response["status_code"] = 200
+    except Exception as e:
+        print(e)
+        response["status_code"] = 500
+
+    return response
