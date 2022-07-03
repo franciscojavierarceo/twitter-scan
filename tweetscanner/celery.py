@@ -5,9 +5,9 @@ import django
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tweetscanner.settings")
 # app = Celery("tweetscanner", broker=os.getenv("CELERY_BROKER_URL"))
-django.setup()
+# django.setup()
 
-from django.conf import settings
+# from django.conf import settings
 from authorization.utils import fetch_and_store_tweets
 
 
