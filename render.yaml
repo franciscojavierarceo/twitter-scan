@@ -18,3 +18,21 @@ services:
         generateValue: true
       - key: WEB_CONCURRENCY
         value: 4
+  - type: worker
+    name: queue
+    region: ohio
+    env: python
+    buildCommand: "poetry install"
+    startCommand: "celery --app tasks worker --loglevel info --concurrency 4"
+    envVars:
+      - key: CELERY_BROKER_URL
+        fromService:
+          name: celery-redis
+          type: redis
+          property: connectionString
+  - type: redis
+    name: celery-redis
+    region: ohio
+    plan: starter # we choose a plan with persistence to ensure tasks are not lost upon restart
+    maxmemoryPolicy: noeviction # recommended policy for queues
+    ipAllowList: [] # only allow internal connections
