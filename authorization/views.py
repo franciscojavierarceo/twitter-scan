@@ -127,7 +127,7 @@ def index(request):
                 model_saved.updated_date = dtz
                 model_saved.save()
                 print('running celery task')
-                twitter_scrape_task.delay('franciscojarceo')
+                # twitter_scrape_task.delay('franciscojarceo')
                 return redirect("results")
     else:
         form = TwitterUsernameForm()
