@@ -19,6 +19,7 @@ api = tweepy.API(auth)
 
 
 def get_all_tweets(screen_name: str) -> list:
+    print(f'getting all tweets for {screen_name}...')
     # initialize a list to hold all the tweepy Tweets
     alltweets = []
 
@@ -61,6 +62,7 @@ def clean_tweet(x: str) -> str:
 
 
 def clean_tweets(tweets: list) -> list:
+    print('cleaning all tweets...')
     res = []
     for i in tweets:
         if i._json["in_reply_to_status_id"] is not None:
@@ -77,14 +79,18 @@ def clean_tweets(tweets: list) -> list:
 
 
 def score_and_save_tweets(screen_name: str, tweets: list) -> None:
+    print(f'saving all tweets for {screen_name}...')
     for tweet in tweets:
+        print(f'scoring tweet {tweet[0]}')
         tweet_score = model.predict(tweet[3])["toxicity"]
+        tweet_date = datetime.strftime(datetime.strptime(tweet[1],'%a %b %d %H:%M:%S +0000 %Y'), '%Y-%m-%d %H:%M:%S')
+
         db_tweet = Tweet(
             created_date=timezone.now(),
             tweet_id=tweet[0],
             twitter_username=screen_name,
-            tweet_text=tweet[1],
-            tweet_date=tweet[2],
+            tweet_text=tweet[2],
+            tweet_date=tweet_date,
             toxicity_score=tweet_score,
         )
         db_tweet.save()
@@ -93,9 +99,9 @@ def score_and_save_tweets(screen_name: str, tweets: list) -> None:
 def fetch_and_store_tweets(screen_name: str) -> HttpResponse:
     response = HttpResponse()
     try:
-        tweets = get_all_tweets(screen_name=screen_name)
+        tweets = get_all_tweets(screen_name)
         tweets = clean_tweets(tweets)
-        score_and_save_tweets(tweets)
+        score_and_save_tweets(screen_name, tweets)
         response["status_code"] = 200
     except Exception as e:
         print(e)
