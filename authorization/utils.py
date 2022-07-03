@@ -20,7 +20,7 @@ api = tweepy.API(auth)
 
 
 def get_all_tweets(screen_name: str) -> list:
-    print(f'getting all tweets for {screen_name}...')
+    print(f"getting all tweets for {screen_name}...")
     # initialize a list to hold all the tweepy Tweets
     alltweets = []
 
@@ -63,7 +63,7 @@ def clean_tweet(x: str) -> str:
 
 
 def clean_tweets(tweets: list) -> list:
-    print('cleaning all tweets...')
+    print("cleaning all tweets...")
     res = []
     for i in tweets:
         if i._json["in_reply_to_status_id"] is not None:
@@ -78,24 +78,30 @@ def clean_tweets(tweets: list) -> list:
             )
     return res
 
+
 def score_tweets(input_text: str) -> float:
     # model = Detoxify("original")
     preds = model.predict(input_text)
-    return preds['toxicity']
+    return preds["toxicity"]
+
 
 @transaction.atomic
 def score_and_save_tweets(screen_name: str, tweets: list) -> None:
     from authorization.models import Tweet
-    print(f'saving all tweets for {screen_name}...')
+
+    print(f"saving all tweets for {screen_name}...")
     for tweet in tweets:
         if tweet[3]:
-            print(f'scoring tweet: {tweet[3]}')
+            print(f"scoring tweet: {tweet[3]}")
             tweet_score = score_tweets(tweet[3])
         else:
-            tweet_score = 0.
-        print('tweet scored...')
-        tweet_date = datetime.strftime(datetime.strptime(tweet[1],'%a %b %d %H:%M:%S +0000 %Y'), '%Y-%m-%d %H:%M:%S')
-        print('saving record...')
+            tweet_score = 0.0
+        print("tweet scored...")
+        tweet_date = datetime.strftime(
+            datetime.strptime(tweet[1], "%a %b %d %H:%M:%S +0000 %Y"),
+            "%Y-%m-%d %H:%M:%S",
+        )
+        print("saving record...")
         db_tweet = Tweet(
             created_date=timezone.now(),
             tweet_id=tweet[0],

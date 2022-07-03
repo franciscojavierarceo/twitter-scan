@@ -11,6 +11,7 @@ from django.http import HttpResponseRedirect
 from django.utils import timezone
 from tweetscanner.celery import twitter_scrape_task
 
+
 def twitter_login(request):
     print("calling twitter api")
     try:
@@ -126,7 +127,7 @@ def index(request):
                 model_saved.created_date = dtz
                 model_saved.updated_date = dtz
                 model_saved.save()
-                print('running celery task')
+                print("running celery task")
                 # twitter_scrape_task.delay('franciscojarceo')
                 return redirect("results")
     else:
