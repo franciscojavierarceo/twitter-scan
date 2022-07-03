@@ -7,6 +7,7 @@ from .models import TwitterAuthToken, TwitterUser, TwitterUserSearched
 from .authorization import create_update_user_from_twitter, check_token_still_valid
 from twitter_api.twitter_api import TwitterAPI
 from .forms import TwitterUsernameForm
+from .utils import fetch_and_store_tweets
 from django.http import HttpResponseRedirect
 from django.utils import timezone
 
@@ -105,7 +106,6 @@ def index(request):
         dtz = timezone.now()
         curr_user = TwitterUser.objects.get(user=request.user)
         tuser = request.POST.get("twitter_username", None)
-        print(curr_user, tuser)
         db_recs = TwitterUserSearched.objects.filter(
             twitter_username=tuser,
             submitter_user=curr_user,
@@ -126,7 +126,7 @@ def index(request):
                 model_saved.created_date = dtz
                 model_saved.updated_date = dtz
                 model_saved.save()
-
+                print(fetch_and_store_tweets(tuser))
                 return redirect("results")
     else:
         form = TwitterUsernameForm()

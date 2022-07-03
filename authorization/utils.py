@@ -92,16 +92,13 @@ def score_and_save_tweets(screen_name: str, tweets: list) -> None:
     print(f"saving all tweets for {screen_name}...")
     for tweet in tweets:
         if tweet[3]:
-            print(f"scoring tweet: {tweet[3]}")
             tweet_score = score_tweets(tweet[3])
         else:
             tweet_score = 0.0
-        print("tweet scored...")
         tweet_date = datetime.strftime(
             datetime.strptime(tweet[1], "%a %b %d %H:%M:%S +0000 %Y"),
             "%Y-%m-%d %H:%M:%S",
         )
-        print("saving record...")
         db_tweet = Tweet(
             created_date=timezone.now(),
             tweet_id=tweet[0],
