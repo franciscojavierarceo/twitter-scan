@@ -81,7 +81,7 @@ def clean_tweets(tweets: list) -> list:
 @transaction.atomic
 def score_and_save_tweets(screen_name: str, tweets: list) -> None:
     from authorization.models import Tweet
-    model = Detoxify("original")
+    # model = Detoxify("original")
     print(f'saving all tweets for {screen_name}...')
     for tweet in tweets:
         if tweet[3]:
