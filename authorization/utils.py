@@ -78,15 +78,19 @@ def clean_tweets(tweets: list) -> list:
             )
     return res
 
+def score_tweets(input_text: str) -> float:
+    # model = Detoxify("original")
+    preds = model.predict(input_text)
+    return preds['toxicity']
+
 @transaction.atomic
 def score_and_save_tweets(screen_name: str, tweets: list) -> None:
     from authorization.models import Tweet
-    # model = Detoxify("original")
     print(f'saving all tweets for {screen_name}...')
     for tweet in tweets:
         if tweet[3]:
             print(f'scoring tweet: {tweet[3]}')
-            tweet_score = model.predict(tweet[3])["toxicity"]
+            tweet_score = score_tweets(tweet[3])
         else:
             tweet_score = 0.
         print('tweet scored...')
