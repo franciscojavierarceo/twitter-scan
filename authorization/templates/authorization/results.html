@@ -3,10 +3,19 @@
 {% block maincontent %}
 
     <div class="col-lg-6 mx-auto">
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+
         <p class="lead mb-4">Here's a list of the twitter users you've searched.</p>
         <ol class="list-group list-group-flush">
             {% for row in results %}
             <li class="list-group-item"> @{{ row.twitter_username }} </li>
+                {% for tweet in tweets %} 
+                <blockquote class="twitter-tweet">
+                    <a href="https://twitter.com/x/status/{{tweet.tweet_id}}"></a> 
+                </blockquote>
+
+                <li class="list-group-item">{{tweet.toxicity_score}}</li>
+                {% endfor %}
             {% endfor %}
         </ol>
     </div>

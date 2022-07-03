@@ -3,7 +3,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .decorators import twitter_login_required
-from .models import TwitterAuthToken, TwitterUser, TwitterUserSearched
+from .models import Tweet, TwitterAuthToken, TwitterUser, TwitterUserSearched
 from .authorization import create_update_user_from_twitter, check_token_still_valid
 from twitter_api.twitter_api import TwitterAPI
 from .forms import TwitterUsernameForm
@@ -146,4 +146,7 @@ def results(request):
     results = TwitterUserSearched.objects.filter(
         submitter_user=curr_user,
     )
-    return render(request, "authorization/results.html", {"results": results})
+    tweets = Tweet.objects.filter(
+        twitter_username__in=results.values_list('twitter_username', flat=True)
+    ).order_by('-toxicity_score')[:10]
+    return render(request, "authorization/results.html", {"results": results, "tweets": tweets})
