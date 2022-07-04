@@ -7,7 +7,7 @@
 
         <p class="lead mb-4">Here's a list of the twitter users you've searched.</p>
         <ol class="list-group list-group-flush">
-            <table class="table">
+            <table class="table-light">
             {% for row in results %}
             {% comment %} <li class="list-group-item"> @{{ row.twitter_username }} </li> {% endcomment %}
                     <thead><tr>
@@ -21,9 +21,12 @@
                         <td class="col">{{tweet.tweet_id}}</td>
                         <td class="col">{{tweet.toxicity_score}}</td>
                         <td class="col">
-                            <blockquote class="twitter-tweet">
-                                <a href="https://twitter.com/x/status/{{tweet.tweet_id}}"></a> 
-                            </blockquote>
+                            <a href="#" onclick="showTweet('{{tweet.tweet_id}}');" id="{{tweet.tweet_id}}-text">Show Tweet</a>
+                            <div style="display:none" id="{{tweet.tweet_id}}">
+                                <blockquote class="twitter-tweet">
+                                    <a href="https://twitter.com/x/status/{{tweet.tweet_id}}"></a> 
+                                </blockquote> 
+                            </div>
                         </td>
                     </tr>
                 {% endfor %}
@@ -31,6 +34,20 @@
             {% endfor %}
             </table>
         </ol>
+        <script>
+            function showTweet(tweetid) {
+                var T = document.getElementById(tweetid)
+                if (T.style.display == 'none') {
+                    T.style.display = "block";
+                    var t2 = document.getElementById(tweetid + '-text')
+                    t2.innerHTML = 'Hide Tweet';
+                } else {
+                    T.style.display = "none";
+                    var t2 = document.getElementById(tweetid + '-text')
+                    t2.innerHTML = 'Show Tweet';
+                }
+            }
+        </script>
     </div>
 
 {% endblock %}
