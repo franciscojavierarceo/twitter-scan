@@ -7,39 +7,29 @@
 
         <p class="lead mb-4">Here's a list of the twitter users you've searched.</p>
         <ol class="list-group list-group-flush">
+            <table class="table">
             {% for row in results %}
-            <li class="list-group-item"> @{{ row.twitter_username }} </li>
-                <div class="row mb-3">
-                    <tr>
-                    <div class="col-md-4 themed-grid-col">
-                        <li class="list-group-item text-bf">Tweet ID</li>
-                    </div>
-                    <div class="col-md-4 themed-grid-col">
-                        <li class="list-group-item">Toxicity Score</li>
-                    </div>
-                    <div class="col-md-4 themed-grid-col">
-                        <li class="list-group-item">Tweet</li>
-                    </div>
-                    </tr>
-                </div>
-                <div class="row mb-3">
+            {% comment %} <li class="list-group-item"> @{{ row.twitter_username }} </li> {% endcomment %}
+                    <thead><tr>
+                        <th class="col">Tweet ID</th>
+                        <th class="col">Toxicity Score</th>
+                        <th class="col">Tweet</th>
+                    </tr></thead>
+                <tbody>
                 {% for tweet in tweets %} 
-                    <div class="col-md-4 themed-grid-col">
-                        <li class="list-group-item">{{tweet.tweet_id}}</li>
-                    </div>
-                    <div class="col-md-4 themed-grid-col">
-                        <li class="list-group-item">{{tweet.toxicity_score}}</li>
-                    </div>
-                    <div class="col-md-4 themed-grid-col">
-                        <li class="list-group-item">
+                    <tr>
+                        <td class="col">{{tweet.tweet_id}}</td>
+                        <td class="col">{{tweet.toxicity_score}}</td>
+                        <td class="col">
                             <blockquote class="twitter-tweet">
                                 <a href="https://twitter.com/x/status/{{tweet.tweet_id}}"></a> 
                             </blockquote>
-                        </li>
-                    </div>
+                        </td>
+                    </tr>
                 {% endfor %}
-                </div>
+                    </tbody>
             {% endfor %}
+            </table>
         </ol>
     </div>
 
