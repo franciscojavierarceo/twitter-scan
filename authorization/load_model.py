@@ -1,4 +1,4 @@
-import Detoxify
+from detoxify import Detoxify
 
 def main():
     print(Detoxify('original').predict('model loaded'))
