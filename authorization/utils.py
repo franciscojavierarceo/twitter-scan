@@ -22,7 +22,7 @@ auth = tweepy.OAuthHandler(TWITTER_API_KEY, TWITTER_API_SECRET)
 api = tweepy.API(auth)
 
 
-def get_all_tweets(screen_name: str) -> list:
+def get_tweets(screen_name: str) -> list:
     print(f"getting all tweets for {screen_name}...")
     # initialize a list to hold all the tweepy Tweets
     alltweets = []
@@ -41,7 +41,7 @@ def get_all_tweets(screen_name: str) -> list:
         print(f"getting tweets before {oldest}")
         # all subsequent requests use the max_id param to prevent duplicates
         new_tweets = api.user_timeline(
-            screen_name=screen_name, count=200, max_id=oldest
+            screen_name=screen_name, count=20, max_id=oldest
         )
         # save most recent tweets
         alltweets.extend(new_tweets)
@@ -112,7 +112,7 @@ def score_and_save_tweets(screen_name: str, tweets: list) -> None:
 def fetch_and_store_tweets(screen_name: str) -> HttpResponse:
     response = HttpResponse()
     try:
-        tweets = get_all_tweets(screen_name)
+        tweets = get_tweets(screen_name)
         tweets = clean_tweets(tweets)
         score_and_save_tweets(screen_name, tweets)
         response["status_code"] = 200
