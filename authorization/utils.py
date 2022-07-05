@@ -5,14 +5,14 @@ import tweepy
 from django.utils import timezone
 from datetime import datetime
 
-# import pandas as pd
 from django.http import HttpResponse
-from detoxify import Detoxify
+from authorization.load_model import Detoxify
 from authorization.models import Tweet
 from django.db import transaction
 
-# model = Detoxify("original")
-# testpred = model.predict("this is running the model at buildtime")
+model = Detoxify("original-small")
+testpred = model.predict("this is running the model at buildtime")
+print(f"running buildtime prediction: {testpred}")
 
 TWITTER_API_KEY = os.environ.get("TWITTER_API_KEY")
 TWITTER_API_SECRET = os.environ.get("TWITTER_API_SECRET")
