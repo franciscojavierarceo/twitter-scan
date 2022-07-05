@@ -104,7 +104,7 @@ def score_and_save_tweets(screen_name: str, tweets: list) -> None:
             twitter_username=screen_name,
             tweet_text=tweet[2],
             tweet_date=tweet_date,
-            toxicity_score=tweet_score,
+            toxicity_score=round(tweet_score * 100., 2),
         )
         db_tweet.save()
 
