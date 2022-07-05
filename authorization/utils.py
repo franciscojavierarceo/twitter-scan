@@ -11,8 +11,8 @@ from detoxify import Detoxify
 from authorization.models import Tweet
 from django.db import transaction
 
-model = Detoxify("original")
-testpred = model.predict("this is running the model at buildtime")
+# model = Detoxify("original")
+# testpred = model.predict("this is running the model at buildtime")
 
 TWITTER_API_KEY = os.environ.get("TWITTER_API_KEY")
 TWITTER_API_SECRET = os.environ.get("TWITTER_API_SECRET")
@@ -82,7 +82,7 @@ def clean_tweets(tweets: list) -> list:
 
 
 def score_tweets(input_text: str) -> float:
-    # model = Detoxify("original")
+    model = Detoxify("original")
     preds = model.predict(input_text)
     return preds["toxicity"]
 

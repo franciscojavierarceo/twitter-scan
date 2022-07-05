@@ -7,4 +7,4 @@ poetry install
 
 python manage.py collectstatic --no-input
 python manage.py migrate 
-python authorization/load_model.py
+# python authorization/load_model.py
