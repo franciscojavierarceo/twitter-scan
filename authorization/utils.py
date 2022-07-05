@@ -84,7 +84,6 @@ def clean_tweets(tweets: list) -> list:
 
 
 def score_tweets(input_text: str) -> float:
-    model = Detoxify("original-small")
     preds = model.predict(input_text)
     return preds["toxicity"]
 
