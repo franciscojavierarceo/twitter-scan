@@ -34,7 +34,7 @@ def get_all_tweets(screen_name: str) -> list:
 
     # save the id of the oldest tweet less one
     oldest = alltweets[-1].id - 1
-
+    
     # keep grabbing tweets until there are no tweets left to grab
     while len(new_tweets) > 0:
         print(f"getting tweets before {oldest}")
@@ -47,6 +47,8 @@ def get_all_tweets(screen_name: str) -> list:
         # update the id of the oldest tweet less one
         oldest = alltweets[-1].id - 1
         print(f"...{len(alltweets)} tweets downloaded so far")
+        # only grabbing at most 200
+        break
 
     return alltweets
 
