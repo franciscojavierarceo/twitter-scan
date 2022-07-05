@@ -103,6 +103,8 @@ def twitter_callback(request):
 @twitter_login_required
 def index(request):
     if request.method == "POST":
+        form = TwitterUsernameForm(request.POST)
+        print(f'form valid = {form.is_valid()}')
         dtz = timezone.now()
         curr_user = TwitterUser.objects.get(user=request.user)
         tuser = request.POST.get("twitter_username", None)
@@ -110,17 +112,15 @@ def index(request):
             twitter_username=tuser,
             submitter_user=curr_user,
         )
-        if db_recs.count() > 0:
-            print(f"{db_recs.count()} records found")
-            db_rec = db_recs.last()
-            db_rec.updated_date = dtz
-            db_rec.save()
-
-            return redirect("results")
-        else:
-            print("no records found")
-            form = TwitterUsernameForm(request.POST)
-            if form.is_valid():
+        if form.is_valid():
+            if db_recs.count() > 0:
+                print(f"{db_recs.count()} records found")
+                db_rec = db_recs.last()
+                db_rec.updated_date = dtz
+                db_rec.save()
+                return redirect("results")
+            else:
+                print("no records found")
                 model_saved = form.save()
                 model_saved.submitter_user = curr_user
                 model_saved.created_date = dtz
