@@ -1,8 +1,9 @@
+import os 
 import torch
 import transformers
 
 MODEL_URLS = {
-    "original-small": "./v0.1.2/original-albert-0e1d6498.ckpt",
+    "original-small": "./original-albert-0e1d6498.ckpt",
 }
 
 PRETRAINED_MODEL = None
@@ -32,7 +33,8 @@ def get_model_and_tokenizer(
 def load_checkpoint(model_type="original-small", checkpoint=None, device="cpu", huggingface_config_path=None):
     if checkpoint is None:
         checkpoint_path = MODEL_URLS[model_type]
-        loaded = torch.hub.load_state_dict_from_url(checkpoint_path, map_location=device)
+        # loaded = torch.hub.load_state_dict_from_url(checkpoint_path, map_location=device)
+        loaded = torch.load(checkpoint_path, map_location=device)
     else:
         loaded = torch.load(checkpoint, map_location=device)
         if "config" not in loaded or "state_dict" not in loaded:
