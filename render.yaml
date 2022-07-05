@@ -8,7 +8,7 @@ services:
     name: tweetscanner
     env: python
     buildCommand: "./build.sh"
-    startCommand: "gunicorn tweetscanner.wsgi:application"
+    startCommand: "gunicorn tweetscanner.wsgi:application --timeout 90"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
