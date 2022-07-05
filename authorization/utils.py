@@ -2,6 +2,7 @@ from curses.ascii import HT
 import os
 import re
 import tweepy
+import pytz
 from django.utils import timezone
 from datetime import datetime
 
@@ -91,18 +92,12 @@ def score_tweets(input_text: str) -> float:
 
 @transaction.atomic
 def score_and_save_tweets(screen_name: str, tweets: list) -> None:
-    from authorization.models import Tweet
-
+    print(f"scoring all tweets for {screen_name}...")
+    tweettext = [j[3] if j[3] else '' for j in tweets]
+    tweet_scores = score_tweets(tweettext)
     print(f"saving all tweets for {screen_name}...")
-    for tweet in tweets:
-        if tweet[3]:
-            tweet_score = score_tweets(tweet[3])
-        else:
-            tweet_score = 0.0
-        tweet_date = datetime.strftime(
-            datetime.strptime(tweet[1], "%a %b %d %H:%M:%S +0000 %Y"),
-            "%Y-%m-%d %H:%M:%S",
-        )
+    for tweet, tweet_score in zip(tweets, tweet_scores):
+        tweet_date = datetime.strptime(tweet[1], "%a %b %d %H:%M:%S +0000 %Y").astimezone(pytz.UTC)
         db_tweet = Tweet(
             created_date=timezone.now(),
             tweet_id=tweet[0],
