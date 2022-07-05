@@ -31,6 +31,7 @@ def get_model_and_tokenizer(
 
 
 def load_checkpoint(model_type="original-small", checkpoint=None, device="cpu", huggingface_config_path=None):
+    print('loading model...')
     if checkpoint is None:
         checkpoint_path = MODEL_URLS[model_type]
         # loaded = torch.hub.load_state_dict_from_url(checkpoint_path, map_location=device)
