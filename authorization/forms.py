@@ -15,7 +15,6 @@ class TwitterUsernameForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super(TwitterUsernameForm, self).clean()
         data = self.cleaned_data['twitter_username']
-        #if "franciscojarceo" in data:
-        if True:
+        if "franciscojarceo" in data:
             raise ValidationError("sorry bro not frannie!")
         return data
