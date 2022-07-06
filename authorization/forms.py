@@ -16,7 +16,7 @@ class TwitterUsernameForm(forms.ModelForm):
         exclude_list = [
             'franciscojarceo',
             'mlevchin',
-            'affirm'
+            'affirm',
         ]
         cleaned_data = super(TwitterUsernameForm, self).clean()
         data = self.cleaned_data['twitter_username']
