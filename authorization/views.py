@@ -150,6 +150,7 @@ def results(request):
     tweets = Tweet.objects.filter(
         twitter_username__in=results.values_list("twitter_username", flat=True)
     ).order_by("twitter_username", "-toxicity_score")
+    
     return render(
         request, "authorization/results.html", {"results": results, "tweets": tweets}
     )
