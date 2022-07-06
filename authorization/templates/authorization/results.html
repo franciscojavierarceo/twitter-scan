@@ -8,8 +8,8 @@
         <p class="lead mb-4">Here's a list of the twitter users you've searched.</p>
         <ol class="list-group list-group-flush">
             <table class="table-light">
-            {% for row in results %}
-            {% comment %} <li class="list-group-item"> @{{ row.twitter_username }} </li> {% endcomment %}
+            {% comment %} {% for row in results %} {% endcomment %}
+            <li class="list-group-item"> @{{ row.twitter_username }} </li>
                     <thead><tr>
                         {% comment %} <th class="col">Tweet ID</th> {% endcomment %}
                         <th class="col">Toxicity Score [0,100%]</th>
@@ -18,12 +18,12 @@
                 <tbody>
                 {% for tweet in tweets %} 
                     <tr>
-                        {% comment %} <td class="col">{{tweet.tweet_id}}</td> {% endcomment %}
+                        <td class="col">{{tweet.twitter_username}}</td>
                         <td class="col">{{tweet.toxicity_score}}%</td>
 
                         <td class="col">
-                            <a href="#" onclick="showTweet('{{tweet.tweet_id}}');" id="{{tweet.tweet_id}}-text">Show Tweet</a>
-                            <div style="display:none" id="{{tweet.tweet_id}}">
+                            <a href="#" onclick="showTweet('{{tweet.twitter_username}}-{{tweet.tweet_id}}');" id="{{tweet.twitter_username}}-{{tweet.tweet_id}}-text">Show Tweet</a>
+                            <div style="display:none" id="{{tweet.twitter_username}}-{{tweet.tweet_id}}">
                                 <blockquote class="twitter-tweet">
                                     <a href="https://twitter.com/x/status/{{tweet.tweet_id}}"></a> 
                                 </blockquote> 
@@ -32,7 +32,7 @@
                     </tr>
                 {% endfor %}
                     </tbody>
-            {% endfor %}
+            {% comment %} {% endfor %} {% endcomment %}
             </table>
         </ol>
         <script>

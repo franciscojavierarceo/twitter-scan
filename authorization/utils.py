@@ -35,8 +35,8 @@ def get_tweets(screen_name: str, ntweets=20, get_historical=False) -> list:
 
     # save the id of the oldest tweet less one
     oldest = alltweets[-1].id - 1
-    
-    if get_historical: 
+
+    if get_historical:
         # keep grabbing tweets until there are no tweets left to grab
         while len(new_tweets) > 0:
             print(f"getting tweets before {oldest}")
@@ -91,18 +91,20 @@ def score_tweets(input_text: str) -> float:
 @transaction.atomic
 def score_and_save_tweets(screen_name: str, tweets: list) -> None:
     print(f"scoring all tweets for {screen_name}...")
-    tweettext = [j[3] if j[3] else '' for j in tweets]
+    tweettext = [j[3] if j[3] else "" for j in tweets]
     tweet_scores = score_tweets(tweettext)
     print(f"saving all tweets for {screen_name}...")
     for tweet, tweet_score in zip(tweets, tweet_scores):
-        tweet_date = datetime.strptime(tweet[1], "%a %b %d %H:%M:%S +0000 %Y").astimezone(pytz.UTC)
+        tweet_date = datetime.strptime(
+            tweet[1], "%a %b %d %H:%M:%S +0000 %Y"
+        ).astimezone(pytz.UTC)
         db_tweet = Tweet(
             created_date=timezone.now(),
             tweet_id=tweet[0],
             twitter_username=screen_name,
             tweet_text=tweet[2],
             tweet_date=tweet_date,
-            toxicity_score=round(tweet_score * 100., 2),
+            toxicity_score=round(tweet_score * 100.0, 2),
         )
         db_tweet.save()
 

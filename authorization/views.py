@@ -104,7 +104,7 @@ def twitter_callback(request):
 def index(request):
     if request.method == "POST":
         form = TwitterUsernameForm(request.POST)
-        print(f'form valid = {form.is_valid()}')
+        print(f"form valid = {form.is_valid()}")
         dtz = timezone.now()
         curr_user = TwitterUser.objects.get(user=request.user)
         tuser = request.POST.get("twitter_username", None)
@@ -146,7 +146,10 @@ def results(request):
     results = TwitterUserSearched.objects.filter(
         submitter_user=curr_user,
     )
+
     tweets = Tweet.objects.filter(
-        twitter_username__in=results.values_list('twitter_username', flat=True)
-    ).order_by('-toxicity_score')[:10]
-    return render(request, "authorization/results.html", {"results": results, "tweets": tweets})
+        twitter_username__in=results.values_list("twitter_username", flat=True)
+    ).order_by("twitter_username", "-toxicity_score")
+    return render(
+        request, "authorization/results.html", {"results": results, "tweets": tweets}
+    )
