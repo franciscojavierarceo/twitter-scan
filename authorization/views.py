@@ -100,10 +100,9 @@ def twitter_callback(request):
         )
         return render(request, "authorization/error_page.html")
 
-@sync_to_async
 @login_required
 @twitter_login_required
-async def index(request):
+def index(request):
     if request.method == "POST":
         form = TwitterUsernameForm(request.POST)
         print(f"form valid = {form.is_valid()}")
@@ -128,7 +127,7 @@ async def index(request):
                 model_saved.created_date = dtz
                 model_saved.updated_date = dtz
                 model_saved.save()
-                await print(fetch_and_store_tweets(tuser))
+                print(fetch_and_store_tweets(tuser))
                 return redirect("results")
     else:
         form = TwitterUsernameForm()
