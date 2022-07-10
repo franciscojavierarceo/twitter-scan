@@ -141,7 +141,7 @@ def twitter_logout(request):
 
 
 @login_required
-def results(request):
+async def results(request):
     curr_user = TwitterUser.objects.get(user=request.user)
     results = TwitterUserSearched.objects.filter(
         submitter_user=curr_user,
