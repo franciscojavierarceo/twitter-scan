@@ -41,4 +41,4 @@ class Tweet(models.Model):
     toxicity_score = models.FloatField(null=True)
 
     def __str__(self):
-        return f"{self.tweet_id}"
+        return f"{self.twitter_username} - {self.tweet_id}"
