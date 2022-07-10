@@ -1,3 +1,5 @@
+import asyncio
+from asgiref.sync import async_to_sync, sync_to_async
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
@@ -98,10 +100,10 @@ def twitter_callback(request):
         )
         return render(request, "authorization/error_page.html")
 
-
+@sync_to_async
 @login_required
 @twitter_login_required
-def index(request):
+async def index(request):
     if request.method == "POST":
         form = TwitterUsernameForm(request.POST)
         print(f"form valid = {form.is_valid()}")
@@ -126,7 +128,7 @@ def index(request):
                 model_saved.created_date = dtz
                 model_saved.updated_date = dtz
                 model_saved.save()
-                print(fetch_and_store_tweets(tuser))
+                await print(fetch_and_store_tweets(tuser))
                 return redirect("results")
     else:
         form = TwitterUsernameForm()
@@ -139,9 +141,8 @@ def twitter_logout(request):
     logout(request)
     return redirect("index")
 
-
 @login_required
-async def results(request):
+def results(request):
     curr_user = TwitterUser.objects.get(user=request.user)
     results = TwitterUserSearched.objects.filter(
         submitter_user=curr_user,
