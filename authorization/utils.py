@@ -11,6 +11,9 @@ from authorization.load_model import Detoxify
 from authorization.models import Tweet
 from django.db import transaction
 
+import asyncio
+from asgiref.sync import async_to_sync, sync_to_async
+
 model = Detoxify("original-small")
 testpred = model.predict("this is running the model at buildtime")
 print(f"running buildtime prediction: {testpred}")
@@ -109,7 +112,8 @@ def score_and_save_tweets(screen_name: str, tweets: list) -> None:
         db_tweet.save()
 
 
-def fetch_and_store_tweets(screen_name: str) -> HttpResponse:
+@async_to_sync
+async def fetch_and_store_tweets(screen_name: str) -> HttpResponse:
     response = HttpResponse()
     try:
         tweets = get_tweets(screen_name)
