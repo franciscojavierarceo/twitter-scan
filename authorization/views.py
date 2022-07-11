@@ -101,6 +101,7 @@ def twitter_callback(request):
         )
         return render(request, "authorization/error_page.html")
 
+
 @login_required
 @twitter_login_required
 def index(request):
@@ -141,6 +142,7 @@ def twitter_logout(request):
     logout(request)
     return redirect("index")
 
+
 @login_required
 def results(request):
     curr_user = TwitterUser.objects.get(user=request.user)
@@ -151,7 +153,7 @@ def results(request):
     tweets = Tweet.objects.filter(
         twitter_username__in=results.values_list("twitter_username", flat=True)
     ).order_by("twitter_username", "-toxicity_score")
-    
+
     return render(
         request, "authorization/results.html", {"results": results, "tweets": tweets}
     )
