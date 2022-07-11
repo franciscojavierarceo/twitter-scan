@@ -7,16 +7,13 @@
 
         <p class="lead mb-4">Here's a list of the twitter users you've searched.</p>
         <ol class="list-group list-group-flush">
-            <table class="table-light">
-            {% comment %} {% for row in results %} 
-                    <li class="list-group-item"> @{{ tweet.twitter_username }} </li>
-            {% endcomment %}
-                    <thead><tr>
-                        {% comment %} <th class="col">Tweet ID</th> {% endcomment %}
+            <table class="table">
+                <thead><tr>
                         <th class="col">Twitter User</th>
                         <th class="col">Toxicity Score [0,100%]</th>
                         <th class="col">Tweet</th>
-                    </tr></thead>
+                    </tr>
+                </thead>
                 <tbody>
                 {% for tweet in tweets %} 
                     <tr>
@@ -34,7 +31,6 @@
                     </tr>
                 {% endfor %}
                     </tbody>
-            {% comment %} {% endfor %} {% endcomment %}
             </table>
         </ol>
         <script>
