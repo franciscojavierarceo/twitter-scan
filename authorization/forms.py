@@ -1,15 +1,21 @@
 from django import forms
+from crispy_forms.helper import FormHelper
 from .models import TwitterUserSearched
 from django.core.exceptions import ValidationError
 
 
 class TwitterUsernameForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(TwitterUsernameForm, self).__init__(*args, **kwargs)
+        self.fields['twitter_username'].label = False
+
     class Meta:
         model = TwitterUserSearched
         fields = [
             "twitter_username",
         ]
         labels = [""]
+
 
     def clean_twitterusername(self):
         exclude_list = [
