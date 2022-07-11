@@ -20,7 +20,7 @@
                 <tbody>
                 {% for tweet in tweets %} 
                     <tr>
-                        <td class="col">@{{tweet.twitter_username}}</td>
+                        <td class="col"><a href="https://twitter.com/{{tweet.twitter_username}}">@{{tweet.twitter_username}}</a></td>
                         <td class="col">{{tweet.toxicity_score}}%</td>
 
                         <td class="col">
