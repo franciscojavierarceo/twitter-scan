@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 class TwitterUsernameForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(TwitterUsernameForm, self).__init__(*args, **kwargs)
-        self.fields['twitter_username'].label = False
+        self.fields["twitter_username"].label = False
 
     class Meta:
         model = TwitterUserSearched
@@ -15,7 +15,6 @@ class TwitterUsernameForm(forms.ModelForm):
             "twitter_username",
         ]
         labels = [""]
-
 
     def clean_twitterusername(self):
         exclude_list = [
