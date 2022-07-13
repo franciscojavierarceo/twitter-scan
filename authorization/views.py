@@ -12,7 +12,6 @@ from .forms import TwitterUsernameForm
 from .utils import fetch_and_store_tweets
 from django.http import HttpResponseRedirect
 from django.utils import timezone
-from tweetscanner.celery import twitter_scrape_task
 
 
 def twitter_login(request):
@@ -129,7 +128,7 @@ def index(request):
                 model_saved.created_date = dtz
                 model_saved.updated_date = dtz
                 model_saved.save()
-                print(twitter_scrape_task.delay(tuser))
+                print(fetch_and_store_tweets(tuser))
                 return redirect("results")
     else:
         form = TwitterUsernameForm()
