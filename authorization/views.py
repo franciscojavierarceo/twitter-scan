@@ -9,7 +9,7 @@ from .models import Tweet, TwitterAuthToken, TwitterUser, TwitterUserSearched
 from .authorization import create_update_user_from_twitter, check_token_still_valid
 from twitter_api.twitter_api import TwitterAPI
 from .forms import TwitterUsernameForm
-from .utils import fetch_and_store_tweets
+from .utils import fetch_and_store_tweets, fetch_and_store_historical_tweets
 from django.http import HttpResponseRedirect
 from django.utils import timezone
 
@@ -129,6 +129,7 @@ def index(request):
                 model_saved.updated_date = dtz
                 model_saved.save()
                 print(fetch_and_store_tweets(tuser))
+                fetch_and_store_historical_tweets.delay(tuser)
                 return redirect("results")
     else:
         form = TwitterUsernameForm()

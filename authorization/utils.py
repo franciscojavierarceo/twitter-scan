@@ -14,6 +14,8 @@ from django.db import transaction
 import asyncio
 from asgiref.sync import async_to_sync, sync_to_async
 
+from celery.decorators import task
+
 model = Detoxify("original-small")
 testpred = model.predict("this is running the model at buildtime")
 print(f"running buildtime prediction: {testpred}")
@@ -21,8 +23,7 @@ print(f"running buildtime prediction: {testpred}")
 TWITTER_API_KEY = os.environ.get("TWITTER_API_KEY")
 TWITTER_API_SECRET = os.environ.get("TWITTER_API_SECRET")
 auth = tweepy.OAuthHandler(TWITTER_API_KEY, TWITTER_API_SECRET)
-# auth = tweepy.OAuth2BearerHandler(os.environ.get("TWITTER_API_BEARER_TOKEN"))
-api = tweepy.API(auth)
+twitter_api = tweepy.API(auth)
 
 
 def get_tweets(screen_name: str, ntweets=20, get_historical=False) -> list:
@@ -31,7 +32,7 @@ def get_tweets(screen_name: str, ntweets=20, get_historical=False) -> list:
     alltweets = []
 
     # make initial request for most recent tweets (200 is the maximum allowed count)
-    new_tweets = api.user_timeline(screen_name=screen_name, count=ntweets)
+    new_tweets = twitter_api.user_timeline(screen_name=screen_name, count=ntweets)
 
     # save most recent tweets
     alltweets.extend(new_tweets)
@@ -44,7 +45,7 @@ def get_tweets(screen_name: str, ntweets=20, get_historical=False) -> list:
         while len(new_tweets) > 0:
             print(f"getting tweets before {oldest}")
             # all subsequent requests use the max_id param to prevent duplicates
-            new_tweets = api.user_timeline(
+            new_tweets = twitter_api.user_timeline(
                 screen_name=screen_name, count=200, max_id=oldest
             )
             # save most recent tweets
@@ -125,3 +126,18 @@ async def fetch_and_store_tweets(screen_name: str) -> HttpResponse:
         response["status_code"] = 500
 
     return response
+
+@task(name='fetch_and_store_historical_tweets')
+def fetch_and_store_historical_tweets(screen_name: str) -> HttpResponse:
+    response = HttpResponse()
+    try:
+        tweets = get_tweets(screen_name)
+        tweets = clean_tweets(tweets)
+        score_and_save_tweets(screen_name, tweets)
+        response["status_code"] = 200
+    except Exception as e:
+        print(e)
+        response["status_code"] = 500
+
+    return response
+
