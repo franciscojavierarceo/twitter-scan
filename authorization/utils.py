@@ -132,7 +132,7 @@ async def fetch_and_store_tweets(screen_name: str) -> HttpResponse:
 def fetch_and_store_historical_tweets(screen_name: str) -> HttpResponse:
     response = HttpResponse()
     try:
-        tweets = get_tweets(screen_name)
+        tweets = get_tweets(screen_name, ntweets=200, historical=True)
         tweets = clean_tweets(tweets)
         score_and_save_tweets(screen_name, tweets)
         response["status_code"] = 200
