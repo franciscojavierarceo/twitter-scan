@@ -14,7 +14,8 @@ from django.db import transaction
 import asyncio
 from asgiref.sync import async_to_sync, sync_to_async
 
-from celery.decorators import task
+from celery import shared_task
+
 
 model = Detoxify("original-small")
 testpred = model.predict("this is running the model at buildtime")
@@ -127,7 +128,7 @@ async def fetch_and_store_tweets(screen_name: str) -> HttpResponse:
 
     return response
 
-@task(name='fetch_and_store_historical_tweets')
+@shared_task
 def fetch_and_store_historical_tweets(screen_name: str) -> HttpResponse:
     response = HttpResponse()
     try:
