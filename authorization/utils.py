@@ -29,31 +29,28 @@ twitter_api = tweepy.API(auth)
 
 def get_tweets(screen_name: str, ntweets=20, get_historical=False) -> list:
     print(f"getting all tweets for {screen_name}...")
-    # initialize a list to hold all the tweepy Tweets
-    alltweets = []
 
     # make initial request for most recent tweets (200 is the maximum allowed count)
     new_tweets = twitter_api.user_timeline(screen_name=screen_name, count=ntweets)
-
-    # save most recent tweets
-    alltweets.extend(new_tweets)
-
-    # save the id of the oldest tweet less one
-    oldest = alltweets[-1].id - 1
+    tweetcounter = len(new_tweets)
 
     if get_historical:
         # keep grabbing tweets until there are no tweets left to grab
         while len(new_tweets) > 0:
-            print(f"getting tweets before {oldest}")
+            print(f"getting tweets before {new_tweets[-1].created_at}")
+            # save the id of the oldest tweet less one
+            oldest = new_tweets[-1].id - 1
+
             # all subsequent requests use the max_id param to prevent duplicates
             new_tweets = twitter_api.user_timeline(
                 screen_name=screen_name, count=200, max_id=oldest
             )
+            tweetcounter += len(new_tweets)
             # save most recent tweets
-            alltweets.extend(new_tweets)
-            # update the id of the oldest tweet less one
-            oldest = alltweets[-1].id - 1
-            print(f"...{len(alltweets)} tweets downloaded so far")
+            tweets = clean_tweets(new_tweets)
+            score_and_save_tweets(screen_name, tweets)
+
+            print(f"...{tweetcounter} tweets downloaded so far")
 
     return alltweets
 
@@ -133,11 +130,9 @@ def fetch_and_store_historical_tweets(screen_name: str) -> HttpResponse:
     response = HttpResponse()
     try:
         tweets = get_tweets(screen_name, ntweets=200, historical=True)
-        tweets = clean_tweets(tweets)
-        score_and_save_tweets(screen_name, tweets)
         response["status_code"] = 200
     except Exception as e:
-        print(e)
+        print(f'failed to get historical tweets: {e}')
         response["status_code"] = 500
 
     return response

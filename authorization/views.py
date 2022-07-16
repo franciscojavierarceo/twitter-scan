@@ -129,7 +129,10 @@ def index(request):
                 model_saved.updated_date = dtz
                 model_saved.save()
                 print(fetch_and_store_tweets(tuser))
-                fetch_and_store_historical_tweets.delay(tuser)
+                try:
+                    fetch_and_store_historical_tweets.delay(tuser)
+                except Exception as e:
+                    print(f'celery task failed {e}')
                 return redirect("results")
     else:
         form = TwitterUsernameForm()
