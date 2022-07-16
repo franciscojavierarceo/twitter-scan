@@ -23,7 +23,7 @@ services:
     region: ohio
     env: python
     buildCommand: "poetry install"
-    startCommand: "celery --app tasks worker --loglevel info --concurrency 4"
+    startCommand: "celery --app tweetscanner worker --loglevel info --concurrency 4"
     envVars:
       - key: CELERY_BROKER_URL
         fromService:
