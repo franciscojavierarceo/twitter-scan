@@ -51,8 +51,9 @@ def get_tweets(screen_name: str, ntweets=20, get_historical=False) -> list:
             score_and_save_tweets(screen_name, tweets)
 
             print(f"...{tweetcounter} tweets downloaded so far")
+            return None
 
-    return alltweets
+    return new_tweets
 
 
 def clean_tweet(x: str) -> str:
