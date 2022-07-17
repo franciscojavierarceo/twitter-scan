@@ -18,6 +18,11 @@ services:
         generateValue: true
       - key: WEB_CONCURRENCY
         value: 4
+      - key: CELERY_BROKER_URL
+        fromService:
+          name: celery-redis
+          type: redis
+          property: connectionString
   - type: worker
     name: queue
     region: ohio
