@@ -33,6 +33,7 @@ def get_tweets(screen_name: str, ntweets=20, get_historical=False) -> list:
     # make initial request for most recent tweets (200 is the maximum allowed count)
     new_tweets = twitter_api.user_timeline(screen_name=screen_name, count=ntweets)
     tweetcounter = len(new_tweets)
+    print(f"retrieved {tweetcounter} tweets for {screen_name}...")
 
     if get_historical:
         # keep grabbing tweets until there are no tweets left to grab
@@ -65,7 +66,7 @@ def clean_tweet(x: str) -> str:
                 return None
         return clean
     except Exception as e:
-        print(e)
+        print(f'failed to clean tweet {e}')
         return x
 
 
@@ -73,16 +74,15 @@ def clean_tweets(tweets: list) -> list:
     print("cleaning all tweets...")
     res = []
     for i in tweets:
-        if i._json["in_reply_to_status_id"] is not None:
-            cleaned = clean_tweet(i._json["text"])
-            res.append(
-                (
-                    i._json["id"],
-                    i._json["created_at"],
-                    i._json["text"],
-                    cleaned,
-                )
+        cleaned = clean_tweet(i._json["text"])
+        res.append(
+            (
+                i._json["id"],
+                i._json["created_at"],
+                i._json["text"],
+                cleaned,
             )
+        )
     return res
 
 
@@ -93,7 +93,7 @@ def score_tweets(input_text: str) -> float:
 
 @transaction.atomic
 def score_and_save_tweets(screen_name: str, tweets: list) -> None:
-    print(f"scoring all tweets for {screen_name}...")
+    print(f"scoring all {len(tweets)} tweets for {screen_name}...")
     tweettext = [j[3] if j[3] else "" for j in tweets]
     tweet_scores = score_tweets(tweettext)
     print(f"saving all tweets for {screen_name}...")
@@ -121,7 +121,7 @@ async def fetch_and_store_tweets(screen_name: str) -> HttpResponse:
         score_and_save_tweets(screen_name, tweets)
         response["status_code"] = 200
     except Exception as e:
-        print(e)
+        print(f'failed to store tweets {e}')
         response["status_code"] = 500
 
     return response
