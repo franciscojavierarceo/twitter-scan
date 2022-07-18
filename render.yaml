@@ -6,6 +6,7 @@ databases:
 services:
   - type: web
     name: tweetscanner
+    region: oregon
     env: python
     buildCommand: "./build.sh"
     startCommand: "gunicorn tweetscanner.wsgi:application --timeout 90"
@@ -25,7 +26,7 @@ services:
           property: connectionString
   - type: worker
     name: queue
-    region: ohio
+    region: oregon 
     env: python
     buildCommand: "poetry install"
     startCommand: "celery --app tweetscanner worker --loglevel info --concurrency 4"
@@ -37,7 +38,7 @@ services:
           property: connectionString
   - type: redis
     name: celery-redis
-    region: ohio
+    region: oregon
     plan: starter # we choose a plan with persistence to ensure tasks are not lost upon restart
     maxmemoryPolicy: noeviction # recommended policy for queues
     ipAllowList: [] # only allow internal connections
