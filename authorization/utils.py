@@ -28,7 +28,7 @@ twitter_api = tweepy.API(auth)
 
 
 def get_tweets(screen_name: str, ntweets=20, get_historical=False) -> list:
-    print(f"getting all tweets for {screen_name}...")
+    print(f"getting tweets for {screen_name}...")
 
     # make initial request for most recent tweets (200 is the maximum allowed count)
     new_tweets = twitter_api.user_timeline(screen_name=screen_name, count=ntweets)
@@ -37,6 +37,7 @@ def get_tweets(screen_name: str, ntweets=20, get_historical=False) -> list:
 
     if get_historical:
         # keep grabbing tweets until there are no tweets left to grab
+        print('getting historical tweets')
         while len(new_tweets) > 0:
             print(f"getting tweets before {new_tweets[-1].created_at}")
             # save the id of the oldest tweet less one
@@ -52,7 +53,8 @@ def get_tweets(screen_name: str, ntweets=20, get_historical=False) -> list:
             score_and_save_tweets(screen_name, tweets)
 
             print(f"...{tweetcounter} tweets downloaded so far")
-            return None
+        print('finished getting historical tweets')
+        return None
 
     return new_tweets
 
@@ -127,14 +129,10 @@ async def fetch_and_store_tweets(screen_name: str) -> HttpResponse:
     return response
 
 @shared_task
-def fetch_and_store_historical_tweets(screen_name: str) -> HttpResponse:
-    response = HttpResponse()
+def fetch_and_store_historical_tweets(screen_name: str) -> None:
     try:
         tweets = get_tweets(screen_name, ntweets=200, get_historical=True)
-        response["status_code"] = 200
     except Exception as e:
         print(f'failed to get historical tweets: {e}')
-        response["status_code"] = 500
 
-    return response
-
+    return None
