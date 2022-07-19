@@ -130,7 +130,7 @@ async def fetch_and_store_tweets(screen_name: str) -> HttpResponse:
 def fetch_and_store_historical_tweets(screen_name: str) -> HttpResponse:
     response = HttpResponse()
     try:
-        tweets = get_tweets(screen_name, ntweets=200, historical=True)
+        tweets = get_tweets(screen_name, ntweets=200, get_historical=True)
         response["status_code"] = 200
     except Exception as e:
         print(f'failed to get historical tweets: {e}')
