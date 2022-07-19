@@ -132,7 +132,7 @@ def index(request):
                 try:
                     fetch_and_store_historical_tweets.delay(tuser)
                 except Exception as e:
-                    print(f'celery task failed {e}')
+                    print(f"celery task failed {e}")
                 return redirect("results")
     else:
         form = TwitterUsernameForm()
