@@ -1,25 +1,21 @@
-from curses.ascii import HT
 import os
 import re
-import tweepy
-import pytz
-from django.utils import timezone
 from datetime import datetime
 
+import pytz
+import tweepy
+from asgiref.sync import async_to_sync
+from celery import shared_task
+from django.db import transaction
 from django.http import HttpResponse
+from django.utils import timezone
+
 from authorization.load_model import Detoxify
 from authorization.models import Tweet
-from django.db import transaction
-
-import asyncio
-from asgiref.sync import async_to_sync, sync_to_async
-
-from celery import shared_task
-
 
 model = Detoxify("original-small")
 testpred = model.predict("this is running the model at buildtime")
-print(f"running buildtime prediction: {testpred}")
+print(f"running build-time prediction: {testpred}")
 
 TWITTER_API_KEY = os.environ.get("TWITTER_API_KEY")
 TWITTER_API_SECRET = os.environ.get("TWITTER_API_SECRET")
@@ -32,9 +28,9 @@ def get_score_save_historical_tweets(screen_name: str, ntweets=20) -> None:
 
     # make initial request for most recent tweets (200 is the maximum allowed count)
     new_tweets = twitter_api.user_timeline(screen_name=screen_name, count=ntweets)
-    tweetcounter = len(new_tweets)
+    tweet_counter: int = len(new_tweets)
     
-    print(f"retrieved {tweetcounter} tweets for {screen_name}...")
+    print(f"retrieved {tweet_counter} tweets for {screen_name}...")
     # keep grabbing tweets until there are no tweets left to grab
     
     while len(new_tweets) > 0:
@@ -46,12 +42,12 @@ def get_score_save_historical_tweets(screen_name: str, ntweets=20) -> None:
         new_tweets = twitter_api.user_timeline(
             screen_name=screen_name, count=200, max_id=oldest
         )
-        tweetcounter += len(new_tweets)
+        tweet_counter += len(new_tweets)
         # save most recent tweets
         tweets = clean_tweets(new_tweets)
         score_and_save_tweets(screen_name, tweets)
 
-        print(f"...{tweetcounter} tweets downloaded so far")
+        print(f"...{tweet_counter} tweets downloaded so far")
     print("finished getting historical tweets")
 
 
@@ -60,8 +56,8 @@ def get_tweets(screen_name: str, ntweets=20, get_historical=False) -> list:
 
     # make initial request for most recent tweets (200 is the maximum allowed count)
     new_tweets = twitter_api.user_timeline(screen_name=screen_name, count=ntweets)
-    tweetcounter = len(new_tweets)
-    print(f"retrieved {tweetcounter} tweets for {screen_name}...")
+    tweet_counter = len(new_tweets)
+    print(f"retrieved {tweet_counter} tweets for {screen_name}...")
 
     return new_tweets
 
@@ -69,9 +65,9 @@ def get_tweets(screen_name: str, ntweets=20, get_historical=False) -> list:
 def clean_tweet(x: str) -> str:
     try:
         clean = re.sub("@[A-Za-z0-9_]+", "", x).strip()
-        replytweet = re.match("… https://t.co/*", clean)
-        if replytweet is not None:
-            if replytweet.end() > 0:
+        reply_tweet = re.match("… https://t.co/*", clean)
+        if reply_tweet is not None:
+            if reply_tweet.end() > 0:
                 return None
         return clean
     except Exception as e:
@@ -82,14 +78,14 @@ def clean_tweet(x: str) -> str:
 def clean_tweets(tweets: list) -> list:
     print("cleaning all tweets...")
     res = []
-    for i in tweets:
-        cleaned = clean_tweet(i._json["text"])
+    for tweet in tweets:
+        cleaned_tweet = clean_tweet(tweet._json["text"])
         res.append(
             (
-                i._json["id"],
-                i._json["created_at"],
-                i._json["text"],
-                cleaned,
+                tweet._json["id"],
+                tweet._json["created_at"],
+                tweet._json["text"],
+                cleaned_tweet,
             )
         )
     return res
