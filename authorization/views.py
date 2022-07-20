@@ -1,17 +1,15 @@
-import asyncio
-from asgiref.sync import async_to_sync, sync_to_async
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from .decorators import twitter_login_required
-from .models import Tweet, TwitterAuthToken, TwitterUser, TwitterUserSearched
-from .authorization import create_update_user_from_twitter, check_token_still_valid
-from twitter_api.twitter_api import TwitterAPI
-from .forms import TwitterUsernameForm
-from .utils import fetch_and_store_tweets, fetch_and_store_historical_tweets
-from django.http import HttpResponseRedirect
 from django.utils import timezone
+
+from twitter_api.twitter_api import TwitterAPI
+from .authorization import create_update_user_from_twitter
+from .decorators import twitter_login_required
+from .forms import TwitterUsernameForm
+from .models import Tweet, TwitterAuthToken, TwitterUser, TwitterUserSearched
+from .utils import fetch_and_store_tweets, fetch_and_store_historical_tweets
 
 
 def twitter_login(request):
