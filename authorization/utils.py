@@ -14,8 +14,8 @@ from authorization.load_model import Detoxify
 from authorization.models import Tweet
 
 model = Detoxify("original-small")
-testpred = model.predict("this is running the model at buildtime")
-print(f"running build-time prediction: {testpred}")
+test_pred = model.predict("this is running the model at buildtime")
+print(f"running build-time prediction: {test_pred}")
 
 TWITTER_API_KEY = os.environ.get("TWITTER_API_KEY")
 TWITTER_API_SECRET = os.environ.get("TWITTER_API_SECRET")
@@ -29,10 +29,10 @@ def get_score_save_historical_tweets(screen_name: str, ntweets=20) -> None:
     # make initial request for most recent tweets (200 is the maximum allowed count)
     new_tweets = twitter_api.user_timeline(screen_name=screen_name, count=ntweets)
     tweet_counter: int = len(new_tweets)
-    
+
     print(f"retrieved {tweet_counter} tweets for {screen_name}...")
     # keep grabbing tweets until there are no tweets left to grab
-    
+
     while len(new_tweets) > 0:
         print(f"getting tweets before {new_tweets[-1].created_at}")
         # save the id of the oldest tweet less one
@@ -99,8 +99,8 @@ def score_tweets(input_text: str) -> float:
 @transaction.atomic
 def score_and_save_tweets(screen_name: str, tweets: list) -> None:
     print(f"scoring all {len(tweets)} tweets for {screen_name}...")
-    tweettext = [j[3] if j[3] else "" for j in tweets]
-    tweet_scores = score_tweets(tweettext)
+    tweet_text = [j[3] if j[3] else "" for j in tweets]
+    tweet_scores = score_tweets(tweet_text)
     print(f"saving all tweets for {screen_name}...")
     for tweet, tweet_score in zip(tweets, tweet_scores):
         tweet_date = datetime.strptime(

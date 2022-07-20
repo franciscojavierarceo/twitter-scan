@@ -128,7 +128,9 @@ def index(request):
                 model_saved.save()
                 print(fetch_and_store_tweets(tuser))
                 try:
+                    print("scheduling celery task to get historical tweets...")
                     fetch_and_store_historical_tweets.delay(tuser)
+                    print("...task scheduled")
                 except Exception as e:
                     print(f"celery task failed {e}")
                 return redirect("results")
