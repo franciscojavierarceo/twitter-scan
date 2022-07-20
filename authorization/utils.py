@@ -23,11 +23,11 @@ auth = tweepy.OAuthHandler(TWITTER_API_KEY, TWITTER_API_SECRET)
 twitter_api = tweepy.API(auth)
 
 
-def get_score_save_historical_tweets(screen_name: str, ntweets=20) -> None:
+def get_score_save_historical_tweets(screen_name: str, n_tweets: int = 20) -> None:
     print(f"getting historical tweets for {screen_name}...")
 
     # make initial request for most recent tweets (200 is the maximum allowed count)
-    new_tweets = twitter_api.user_timeline(screen_name=screen_name, count=ntweets)
+    new_tweets = twitter_api.user_timeline(screen_name=screen_name, count=n_tweets)
     tweet_counter: int = len(new_tweets)
 
     print(f"retrieved {tweet_counter} tweets for {screen_name}...")
@@ -51,11 +51,11 @@ def get_score_save_historical_tweets(screen_name: str, ntweets=20) -> None:
     print("finished getting historical tweets")
 
 
-def get_tweets(screen_name: str, ntweets=20, get_historical=False) -> list:
+def get_tweets(screen_name: str, n_tweets: int = 20) -> list:
     print(f"getting tweets for {screen_name}...")
 
     # make initial request for most recent tweets (200 is the maximum allowed count)
-    new_tweets = twitter_api.user_timeline(screen_name=screen_name, count=ntweets)
+    new_tweets = twitter_api.user_timeline(screen_name=screen_name, count=n_tweets)
     tweet_counter = len(new_tweets)
     print(f"retrieved {tweet_counter} tweets for {screen_name}...")
 
@@ -135,7 +135,7 @@ async def fetch_and_store_tweets(screen_name: str) -> HttpResponse:
 @shared_task
 def fetch_and_store_historical_tweets(screen_name: str) -> None:
     try:
-        get_score_save_historical_tweets(screen_name, ntweets=200)
+        get_score_save_historical_tweets(screen_name, n_tweets=200)
     except Exception as e:
         print(f"failed to get historical tweets: {e}")
 
