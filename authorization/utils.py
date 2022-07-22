@@ -115,7 +115,7 @@ def score_and_save_tweets(screen_name: str, tweets: list) -> None:
             toxicity_score=round(tweet_score * 100.0, 2),
         )
         db_tweet.save()
-    print('...scoring complete')
+    print("...scoring complete")
 
 
 @async_to_sync
