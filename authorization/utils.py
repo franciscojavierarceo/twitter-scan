@@ -5,6 +5,7 @@ from datetime import datetime
 import pytz
 import tweepy
 from asgiref.sync import async_to_sync
+from typing import List
 from celery import shared_task
 from django.db import transaction
 from django.http import HttpResponse
@@ -90,8 +91,19 @@ def clean_tweets(tweets: list) -> list:
         )
     return res
 
+def batch_score(input_text: List[str], batch_size: int=5):
+    preds = []
+    n_batches = len(input_text) // batch_size
+    for i in range(batch_size):
+        start_pos = i
+        end_pos = (i + 1) * n_batches
+        batch_text = input_text[start_pos:end_pos]
+        tmp_preds = score_tweets(batch_text)
+        preds.append(tmp_preds)
+    return preds
 
-def score_tweets(input_text: str) -> float:
+
+def score_tweets(input_text: List[str]) -> List[float]:
     preds = model.predict(input_text)
     return preds["toxicity"]
 
