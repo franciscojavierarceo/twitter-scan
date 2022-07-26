@@ -46,7 +46,7 @@ def get_score_save_historical_tweets(screen_name: str, n_tweets: int = 20) -> No
         tweet_counter += len(new_tweets)
         # save most recent tweets
         tweets = clean_tweets(new_tweets)
-        score_and_save_tweets(screen_name, tweets)
+        score_and_save_tweets(screen_name, tweets, 20)
 
         print(f"...{tweet_counter} tweets downloaded so far")
     print("finished getting historical tweets")
@@ -91,7 +91,8 @@ def clean_tweets(tweets: list) -> list:
         )
     return res
 
-def batch_score(input_text: List[str], batch_size: int=5):
+
+def batch_score(input_text: List[str], batch_size: int = 5):
     preds = []
     n_batches = len(input_text) // batch_size
     for i in range(batch_size):
@@ -109,10 +110,10 @@ def score_tweets(input_text: List[str]) -> List[float]:
 
 
 @transaction.atomic
-def score_and_save_tweets(screen_name: str, tweets: list) -> None:
+def score_and_save_tweets(screen_name: str, tweets: list, batch_size: int = 5) -> None:
     print(f"scoring all {len(tweets)} tweets for {screen_name}...")
     tweet_text = [j[3] if j[3] else "" for j in tweets]
-    tweet_scores = score_tweets(tweet_text)
+    tweet_scores = batch_score(tweet_text, batch_size=batch_size)
     print(f"saving all tweets for {screen_name}...")
     for tweet, tweet_score in zip(tweets, tweet_scores):
         tweet_date = datetime.strptime(
