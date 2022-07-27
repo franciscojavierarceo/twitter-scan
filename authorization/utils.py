@@ -46,7 +46,7 @@ def get_score_save_historical_tweets(screen_name: str, n_tweets: int = 20) -> No
         tweet_counter += len(new_tweets)
         # save most recent tweets
         tweets = clean_tweets(new_tweets)
-        score_and_save_tweets(screen_name, tweets, 20)
+        score_and_save_tweets(screen_name, tweets, 5)
 
         print(f"...{tweet_counter} tweets downloaded so far")
     print("finished getting historical tweets")
