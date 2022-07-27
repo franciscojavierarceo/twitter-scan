@@ -106,8 +106,8 @@ def batch_score(input_text: List[str], batch_size: int = 5):
 
 
 def score_tweets(input_text: List[str]) -> List[float]:
-    preds = model.predict(input_text)
-    return preds["toxicity"]
+    predictions = model.predict(input_text)
+    return predictions["toxicity"]
 
 
 @transaction.atomic
