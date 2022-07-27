@@ -100,6 +100,7 @@ def batch_score(input_text: List[str], batch_size: int = 5):
         start_pos = i
         end_pos = (i + 1) * n_batches
         batch_text = input_text[start_pos:end_pos]
+        print('running batch score...')
         tmp_preds = score_tweets(batch_text)
         preds.append(tmp_preds)
     return preds
