@@ -15,8 +15,8 @@ from authorization.load_model import Detoxify
 from authorization.models import Tweet
 
 model = Detoxify("original-small")
-test_pred = model.predict("this is running the model at buildtime")
-print(f"running build-time prediction: {test_pred}")
+test_prediction = model.predict("this is running the model at buildtime")
+print(f"running build-time prediction: {test_prediction}")
 
 TWITTER_API_KEY = os.environ.get("TWITTER_API_KEY")
 TWITTER_API_SECRET = os.environ.get("TWITTER_API_SECRET")
@@ -93,17 +93,16 @@ def clean_tweets(tweets: list) -> list:
 
 
 def batch_score(input_text: List[str], batch_size: int = 5):
-    preds = []
+    predictions = []
     n_batches = len(input_text) // batch_size
     for i in range(batch_size):
-        print(f"scoring batch {i+1} of {batch_size}")
+        print(f"scoring {i+1} of {n_batches}")
         start_pos = i
         end_pos = (i + 1) * n_batches
         batch_text = input_text[start_pos:end_pos]
-        print('running batch score...')
-        tmp_preds = score_tweets(batch_text)
-        preds.append(tmp_preds)
-    return preds
+        tmp = score_tweets(batch_text)
+        predictions.append(tmp)
+    return predictions
 
 
 def score_tweets(input_text: List[str]) -> List[float]:
