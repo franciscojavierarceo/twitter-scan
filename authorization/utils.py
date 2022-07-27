@@ -24,7 +24,7 @@ auth = tweepy.OAuthHandler(TWITTER_API_KEY, TWITTER_API_SECRET)
 twitter_api = tweepy.API(auth)
 
 
-def get_score_save_historical_tweets(screen_name: str, n_tweets: int = 20) -> None:
+def get_score_save_historical_tweets(screen_name: str, n_tweets: int = 20, debug: bool = False) -> None:
     print(f"getting historical tweets for {screen_name}...")
 
     # make initial request for most recent tweets (200 is the maximum allowed count)
@@ -46,7 +46,7 @@ def get_score_save_historical_tweets(screen_name: str, n_tweets: int = 20) -> No
         tweet_counter += len(new_tweets)
         # save most recent tweets
         tweets = clean_tweets(new_tweets)
-        score_and_save_tweets(screen_name, tweets, 5)
+        score_and_save_tweets(screen_name, tweets, 5, debug)
 
         print(f"...{tweet_counter} tweets downloaded so far")
     print("finished getting historical tweets")
@@ -92,7 +92,7 @@ def clean_tweets(tweets: list) -> list:
     return res
 
 
-def batch_score(input_text: List[str], batch_size: int = 5):
+def batch_score(input_text: List[str], batch_size: int = 5, debug: bool = False) -> List[float]:
     predictions = []
     n_batches = len(input_text) // batch_size
     for i in range(batch_size):
@@ -100,6 +100,8 @@ def batch_score(input_text: List[str], batch_size: int = 5):
         start_pos = i
         end_pos = (i + 1) * n_batches
         batch_text = input_text[start_pos:end_pos]
+        if debug:
+            print(f'scoring batch {batch_text}')
         tmp = score_tweets(batch_text)
         predictions.append(tmp)
     return predictions
@@ -111,10 +113,10 @@ def score_tweets(input_text: List[str]) -> List[float]:
 
 
 @transaction.atomic
-def score_and_save_tweets(screen_name: str, tweets: list, batch_size: int = 5) -> None:
+def score_and_save_tweets(screen_name: str, tweets: list, batch_size: int = 5, debug: bool = False) -> None:
     print(f"scoring all {len(tweets)} tweets for {screen_name}...")
     tweet_text = [j[3] if j[3] else "" for j in tweets]
-    tweet_scores = batch_score(tweet_text, batch_size=batch_size)
+    tweet_scores = batch_score(tweet_text, batch_size=batch_size, debug=debug)
     print(f"saving all tweets for {screen_name}...")
     for tweet, tweet_score in zip(tweets, tweet_scores):
         tweet_date = datetime.strptime(
@@ -148,9 +150,9 @@ async def fetch_and_store_tweets(screen_name: str) -> HttpResponse:
 
 
 @shared_task
-def fetch_and_store_historical_tweets(screen_name: str) -> None:
+def fetch_and_store_historical_tweets(screen_name: str, debug: bool = False) -> None:
     try:
-        get_score_save_historical_tweets(screen_name, n_tweets=200)
+        get_score_save_historical_tweets(screen_name, n_tweets=200, debug=debug)
     except Exception as e:
         print(f"failed to get historical tweets: {e}")
 
