@@ -171,4 +171,5 @@ print(f"loaded broker url @ {CELERY_BROKER_URL} and {CELERY_RESULT_BACKEND}")
 
 CSRF_TRUSTED_ORIGINS = [
     'https://127.0.0.1',
+    'https://tweetscanner.onrender.com',
 ]

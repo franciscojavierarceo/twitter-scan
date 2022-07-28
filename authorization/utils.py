@@ -23,7 +23,7 @@ TWITTER_API_SECRET = os.environ.get("TWITTER_API_SECRET")
 auth = tweepy.OAuthHandler(TWITTER_API_KEY, TWITTER_API_SECRET)
 twitter_api = tweepy.API(auth)
 
-INTERNAL_MODEL_ENDPOINT = 'http://127.0.0.1:8000/score-tweets/'
+INTERNAL_MODEL_ENDPOINT = 'https://tweetscanner.onrender.com/score-tweets/'
 
 def get_score_save_historical_tweets(screen_name: str, n_tweets: int = 20, debug: bool = False) -> None:
     print(f"getting historical tweets for {screen_name}...")
