@@ -10,7 +10,11 @@ from .authorization import create_update_user_from_twitter
 from .decorators import twitter_login_required
 from .forms import TwitterUsernameForm
 from .models import Tweet, TwitterAuthToken, TwitterUser, TwitterUserSearched
-from .utils import fetch_and_store_tweets, fetch_and_store_historical_tweets, score_tweets
+from .utils import (
+    fetch_and_store_tweets,
+    fetch_and_store_historical_tweets,
+    score_tweets,
+)
 
 fetch_and_store_historical_tweets.delay(None)
 
@@ -166,7 +170,6 @@ def results(request):
 
 
 def score_tweets_api(request):
-    tweets = request.POST['tweets']
-    tweets = tweets if isinstance(tweets, list) else [tweets]
+    tweets = request.POST.getlist("tweets")
     predictions = score_tweets(tweets)
     return JsonResponse({"predictions": predictions})

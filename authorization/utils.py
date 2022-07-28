@@ -23,9 +23,12 @@ TWITTER_API_SECRET = os.environ.get("TWITTER_API_SECRET")
 auth = tweepy.OAuthHandler(TWITTER_API_KEY, TWITTER_API_SECRET)
 twitter_api = tweepy.API(auth)
 
-INTERNAL_MODEL_ENDPOINT = 'https://tweetscanner.onrender.com/score-tweets/'
+INTERNAL_MODEL_ENDPOINT = "https://tweetscanner.onrender.com/score-tweets/"
 
-def get_score_save_historical_tweets(screen_name: str, n_tweets: int = 20, debug: bool = False) -> None:
+
+def get_score_save_historical_tweets(
+    screen_name: str, n_tweets: int = 20, debug: bool = False
+) -> None:
     print(f"getting historical tweets for {screen_name}...")
 
     # make initial request for most recent tweets (200 is the maximum allowed count)
@@ -93,18 +96,20 @@ def clean_tweets(tweets: list) -> list:
     return res
 
 
-def batch_score(input_text: List[str], batch_size: int = 5, debug: bool = False) -> List[float]:
+def batch_score(
+    input_text: List[str], batch_size: int = 5, debug: bool = False
+) -> List[float]:
     predictions = []
     n_batches = len(input_text) // batch_size
     for i in range(batch_size):
-        print(f"scoring {i+1} of {n_batches}")
+        print(f"scoring {i + 1} of {n_batches}")
         start_pos = i
         end_pos = (i + 1) * n_batches
         batch_text = input_text[start_pos:end_pos]
         if debug:
-            print(f'scoring batch {batch_text}')
+            print(f"scoring batch {batch_text}")
         res = requests.post(INTERNAL_MODEL_ENDPOINT, data={"tweets": batch_text})
-        tmp = res.json()['predictions']
+        tmp = res.json()["predictions"]
         predictions.append(tmp)
 
     return predictions
@@ -116,7 +121,9 @@ def score_tweets(input_text: List[str]) -> List[float]:
 
 
 @transaction.atomic
-def score_and_save_tweets(screen_name: str, tweets: list, batch_size: int = 5, debug: bool = False) -> None:
+def score_and_save_tweets(
+    screen_name: str, tweets: list, batch_size: int = 5, debug: bool = False
+) -> None:
     print(f"scoring all {len(tweets)} tweets for {screen_name}...")
     tweet_text = [j[3] if j[3] else "" for j in tweets]
     tweet_scores = batch_score(tweet_text, batch_size=batch_size, debug=debug)
