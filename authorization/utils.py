@@ -1,7 +1,7 @@
 import os
 import re
 from datetime import datetime
-
+import requests
 import pytz
 import tweepy
 from asgiref.sync import async_to_sync
@@ -23,6 +23,7 @@ TWITTER_API_SECRET = os.environ.get("TWITTER_API_SECRET")
 auth = tweepy.OAuthHandler(TWITTER_API_KEY, TWITTER_API_SECRET)
 twitter_api = tweepy.API(auth)
 
+INTERNAL_MODEL_ENDPOINT = 'http://127.0.0.1:8000/score-tweets/'
 
 def get_score_save_historical_tweets(screen_name: str, n_tweets: int = 20, debug: bool = False) -> None:
     print(f"getting historical tweets for {screen_name}...")
@@ -102,8 +103,10 @@ def batch_score(input_text: List[str], batch_size: int = 5, debug: bool = False)
         batch_text = input_text[start_pos:end_pos]
         if debug:
             print(f'scoring batch {batch_text}')
-        tmp = score_tweets(batch_text)
+        res = requests.post(INTERNAL_MODEL_ENDPOINT, data={"tweets": batch_text})
+        tmp = res.json()['predictions']
         predictions.append(tmp)
+
     return predictions
 
 
