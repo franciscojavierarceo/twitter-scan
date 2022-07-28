@@ -167,5 +167,6 @@ def results(request):
 
 def score_tweets_api(request):
     tweets = request.POST['tweets']
+    tweets = tweets if isinstance(tweets, list) else [tweets]
     predictions = score_tweets(tweets)
     return JsonResponse({"predictions": predictions})
