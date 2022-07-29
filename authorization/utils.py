@@ -3,6 +3,7 @@ import re
 from datetime import datetime
 import requests
 import pytz
+import math
 import tweepy
 from asgiref.sync import async_to_sync
 from typing import List
@@ -23,13 +24,16 @@ TWITTER_API_SECRET = os.environ.get("TWITTER_API_SECRET")
 auth = tweepy.OAuthHandler(TWITTER_API_KEY, TWITTER_API_SECRET)
 twitter_api = tweepy.API(auth)
 
-INTERNAL_MODEL_ENDPOINT = "https://tweetscanner.onrender.com/score-tweets/"
+INTERNAL_MODEL_ENDPOINT = os.environ.get("INTERNAL_MODEL_ENDPOINT")
 
 
 def get_score_save_historical_tweets(
     screen_name: str, n_tweets: int = 20, debug: bool = False
 ) -> None:
     print(f"getting historical tweets for {screen_name}...")
+    if not screen_name:
+        print("get_score_save_historical_tweets task call worked")
+        return None
 
     # make initial request for most recent tweets (200 is the maximum allowed count)
     new_tweets = twitter_api.user_timeline(screen_name=screen_name, count=n_tweets)
@@ -100,17 +104,11 @@ def batch_score(
     input_text: List[str], batch_size: int = 5, debug: bool = False
 ) -> List[float]:
     predictions = []
-    n_batches = len(input_text) // batch_size
-    for i in range(batch_size):
-        print(f"scoring {i + 1} of {n_batches}")
-        start_pos = i
-        end_pos = (i + 1) * n_batches
-        batch_text = input_text[start_pos:end_pos]
-        if debug:
-            print(f"scoring batch {batch_text}")
+    for i in range(0, len(input_text), batch_size):
+        batch_text = input_text[i:i+batch_size]
         res = requests.post(INTERNAL_MODEL_ENDPOINT, data={"tweets": batch_text})
         tmp = res.json()["predictions"]
-        predictions.append(tmp)
+        predictions.extend(tmp)
 
     return predictions
 
@@ -150,7 +148,7 @@ async def fetch_and_store_tweets(screen_name: str) -> HttpResponse:
     try:
         tweets = get_tweets(screen_name)
         tweets = clean_tweets(tweets)
-        score_and_save_tweets(screen_name, tweets)
+        score_and_save_tweets(screen_name, tweets, True)
         response["status_code"] = 200
     except Exception as e:
         print(f"failed to store tweets {e}")
@@ -162,8 +160,8 @@ async def fetch_and_store_tweets(screen_name: str) -> HttpResponse:
 @shared_task
 def fetch_and_store_historical_tweets(screen_name: str, debug: bool = False) -> None:
     try:
-        get_score_save_historical_tweets(screen_name, n_tweets=200, debug=debug)
+        get_score_save_historical_tweets(screen_name, n_tweets=10, debug=debug)
     except Exception as e:
-        print(f"failed to get historical tweets: {e}")
+        print(f"failed to get historical tweets for {screen_name}: {e}")
 
     return None
