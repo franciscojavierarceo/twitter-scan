@@ -105,7 +105,7 @@ def batch_score(
 ) -> List[float]:
     predictions = []
     for i in range(0, len(input_text), batch_size):
-        batch_text = input_text[i:i+batch_size]
+        batch_text = input_text[i : i + batch_size]
         res = requests.post(INTERNAL_MODEL_ENDPOINT, data={"tweets": batch_text})
         tmp = res.json()["predictions"]
         predictions.extend(tmp)
@@ -160,7 +160,7 @@ async def fetch_and_store_tweets(screen_name: str) -> HttpResponse:
 @shared_task
 def fetch_and_store_historical_tweets(screen_name: str, debug: bool = False) -> None:
     try:
-        get_score_save_historical_tweets(screen_name, n_tweets=10, debug=debug)
+        get_score_save_historical_tweets(screen_name, n_tweets=200, debug=debug)
     except Exception as e:
         print(f"failed to get historical tweets for {screen_name}: {e}")
 
