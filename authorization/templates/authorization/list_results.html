@@ -1,0 +1,76 @@
+{% extends "authorization/base.html" %}
+
+{% block maincontent %}
+
+    <div class="container">
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+        <p class="lead mb-4">Here's a list of the twitter users you've searched.</p>
+        <ol class="list-group list-group-flush">
+            <table class="table">
+                <thead><tr>
+                        <th class="col">Twitter User</th>
+                        <th class="col">Toxicity Score [0,100%]</th>
+                        <th class="col">Tweet</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for tweet in tweets %}
+                    <tr>
+                        <td class="col"><a href="https://twitter.com/{{tweet.twitter_username}}">@{{tweet.twitter_username}}</a></td>
+                        <td class="col">{{tweet.toxicity_score}}%</td>
+
+                        <td class="col">
+                            <a href="#" onclick="showTweet('{{tweet.twitter_username}}-{{tweet.tweet_id}}');" id="{{tweet.twitter_username}}-{{tweet.tweet_id}}-text">Show Tweet</a>
+                            <div style="display:none" id="{{tweet.twitter_username}}-{{tweet.tweet_id}}">
+                                <blockquote class="twitter-tweet">
+                                    <a href="https://twitter.com/x/status/{{tweet.tweet_id}}"></a>
+                                </blockquote>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                    </tbody>
+            </table>
+        </ol>
+        <script>
+            function showTweet(tweetid) {
+                var T = document.getElementById(tweetid)
+                if (T.style.display == 'none') {
+                    T.style.display = "block";
+                    var t2 = document.getElementById(tweetid + '-text')
+                    t2.innerHTML = 'Hide Tweet';
+                } else {
+                    T.style.display = "none";
+                    var t2 = document.getElementById(tweetid + '-text')
+                    t2.innerHTML = 'Show Tweet';
+                }
+            }
+        </script>
+    </div>
+
+{% for contact in page_obj %}
+    {# Each "contact" is a Contact model object. #}
+    {{ contact.full_name|upper }}<br>
+    ...
+{% endfor %}
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock %}
