@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.http import JsonResponse
+from django.views.generic import ListView
 
 from twitter_api.twitter_api import TwitterAPI
 from .authorization import create_update_user_from_twitter
@@ -173,3 +174,22 @@ def score_tweets_api(request):
     tweets = request.POST.getlist("tweets")
     predictions = score_tweets(tweets)
     return JsonResponse({"predictions": predictions})
+
+
+@login_required
+class ScoredTweetsListView(ListView):
+    paginate_by = 10
+    model = Tweet
+
+    def get_queryset(self):
+        curr_user = TwitterUser.objects.get(user=self.request.user)
+        results = TwitterUserSearched.objects.filter(
+            submitter_user=curr_user,
+        )
+        tweets = Tweet.objects.filter(
+            twitter_username__in=results.values_list(
+                "twitter_username",
+                flat=True
+            )
+        ).order_by("twitter_username", "-toxicity_score")
+        return tweets
