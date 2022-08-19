@@ -4,6 +4,7 @@
     <div class="container">
 <table class="table table-bordered">
   <thead>
+  <p class="lead mb-4">Here's a list of the twitter users you've searched.</p>
     <tr>
       <th class="col">Twitter User</th>
       <th class="col">Toxicity Score [0,100%]</th>
@@ -11,11 +12,8 @@
     </tr>
   </thead>
   <tbody>
-    {% for tweet in tweets %}
+    {% for tweet in object_list %}
       <tr>
-        <td>{{ user.username }}</td>
-        <td>{{ user.first_name }}</td>
-        <td>{{ user.email }}</td>
         <td class="col"><a href="https://twitter.com/{{tweet.twitter_username}}">@{{tweet.twitter_username}}</a></td>
         <td class="col">{{tweet.toxicity_score}}%</td>
         <td class="col">
@@ -34,57 +32,27 @@
 {% if is_paginated %}
   <ul class="pagination">
     {% if page_obj.has_previous %}
-      <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
     {% else %}
-      <li class="disabled"><span>&laquo;</span></li>
+        <li class="page-item disabled"><a class="page-link"><span>&laquo;</span></a></li>
     {% endif %}
     {% for i in paginator.page_range %}
       {% if page_obj.number == i %}
-        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+        <li class="page-item active"><a class="page-link"><span>{{ i }}<span class="sr-only"></span></span></a></li>
       {% else %}
-        <li><a href="?page={{ i }}">{{ i }}</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
       {% endif %}
     {% endfor %}
     {% if page_obj.has_next %}
-      <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
     {% else %}
-      <li class="disabled"><span>&raquo;</span></li>
+      <li class="page-item disabled"><a class="page-link"><span>&raquo;</span></a></li>
     {% endif %}
   </ul>
 {% endif %}
 </div>
 
-    <div class="container">
     <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-        <p class="lead mb-4">Here's a list of the twitter users you've searched.</p>
-        <ol class="list-group list-group-flush">
-            <table class="table">
-                <thead><tr>
-                        <th class="col">Twitter User</th>
-                        <th class="col">Toxicity Score [0,100%]</th>
-                        <th class="col">Tweet</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for tweet in tweets %}
-                    <tr>
-                        <td class="col"><a href="https://twitter.com/{{tweet.twitter_username}}">@{{tweet.twitter_username}}</a></td>
-                        <td class="col">{{tweet.toxicity_score}}%</td>
-
-                        <td class="col">
-                            <a href="#" onclick="showTweet('{{tweet.twitter_username}}-{{tweet.tweet_id}}');" id="{{tweet.twitter_username}}-{{tweet.tweet_id}}-text">Show Tweet</a>
-                            <div style="display:none" id="{{tweet.twitter_username}}-{{tweet.tweet_id}}">
-                                <blockquote class="twitter-tweet">
-                                    <a href="https://twitter.com/x/status/{{tweet.tweet_id}}"></a>
-                                </blockquote>
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-                    </tbody>
-            </table>
-        </ol>
         <script>
             function showTweet(tweetid) {
                 var T = document.getElementById(tweetid)
@@ -99,6 +67,5 @@
                 }
             }
         </script>
-    </div>
 
 {% endblock %}

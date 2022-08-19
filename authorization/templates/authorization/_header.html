@@ -7,6 +7,7 @@
 
           <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
             {% if user.is_authenticated %}
+              <li class="nav-item"><a href="{% url 'result_list' %}" class="nav-link active" aria-current="page">Results</a></li>
               <li class="nav-item"><a href="{% url 'index' %}" class="nav-link active" aria-current="page">Search</a></li>
               <li class="nav-item"><a href="{% url 'twitter_logout' %}" class="nav-link">Logout</a></li>
             {% else %} 

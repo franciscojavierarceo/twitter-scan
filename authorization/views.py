@@ -127,7 +127,7 @@ def index(request):
                 db_rec = db_recs.last()
                 db_rec.updated_date = dtz
                 db_rec.save()
-                return redirect("results")
+                return redirect("result_list")
             else:
                 print("no records found")
                 model_saved = form.save()
