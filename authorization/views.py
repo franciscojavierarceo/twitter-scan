@@ -143,7 +143,7 @@ def index(request):
                     print("...task scheduled")
                 except Exception as e:
                     print(f"celery task failed {e}")
-                return redirect("results_list")
+                return redirect("result_list")
     else:
         form = TwitterUsernameForm()
 
