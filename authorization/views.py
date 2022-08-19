@@ -142,7 +142,7 @@ def index(request):
                     print("...task scheduled")
                 except Exception as e:
                     print(f"celery task failed {e}")
-                return redirect("results")
+                return redirect("results_list")
     else:
         form = TwitterUsernameForm()
 
@@ -183,6 +183,21 @@ class ScoredTweetsListView(ListView):
     model = Tweet
     template_name = 'authorization/list_results.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        curr_user = TwitterUser.objects.get(user=self.request.user)
+        results = TwitterUserSearched.objects.filter(
+            submitter_user=curr_user,
+        )
+        tweets = Tweet.objects.filter(
+            twitter_username__in=results.values_list(
+                "twitter_username",
+                flat=True
+            )
+        ).order_by("twitter_username", "-toxicity_score")
+        context['tweets'] = tweets
+        return context
+
     def get_queryset(self):
         curr_user = TwitterUser.objects.get(user=self.request.user)
         results = TwitterUserSearched.objects.filter(
@@ -195,3 +210,4 @@ class ScoredTweetsListView(ListView):
             )
         ).order_by("twitter_username", "-toxicity_score")
         return tweets
+
