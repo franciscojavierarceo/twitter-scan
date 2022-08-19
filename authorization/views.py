@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.http import JsonResponse
 from django.views.generic import ListView
+from django.utils.decorators import method_decorator
 
 from twitter_api.twitter_api import TwitterAPI
 from .authorization import create_update_user_from_twitter
@@ -176,10 +177,11 @@ def score_tweets_api(request):
     return JsonResponse({"predictions": predictions})
 
 
-@login_required
+@method_decorator(login_required, name='dispatch')
 class ScoredTweetsListView(ListView):
     paginate_by = 10
     model = Tweet
+    template_name = 'authorization/list_results.html'
 
     def get_queryset(self):
         curr_user = TwitterUser.objects.get(user=self.request.user)

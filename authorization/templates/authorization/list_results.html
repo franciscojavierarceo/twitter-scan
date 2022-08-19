@@ -1,6 +1,58 @@
 {% extends "authorization/base.html" %}
 
 {% block maincontent %}
+    <div class="container">
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th class="col">Twitter User</th>
+      <th class="col">Toxicity Score [0,100%]</th>
+      <th class="col">Tweet</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for tweet in tweets %}
+      <tr>
+        <td>{{ user.username }}</td>
+        <td>{{ user.first_name }}</td>
+        <td>{{ user.email }}</td>
+        <td class="col"><a href="https://twitter.com/{{tweet.twitter_username}}">@{{tweet.twitter_username}}</a></td>
+        <td class="col">{{tweet.toxicity_score}}%</td>
+        <td class="col">
+            <a href="#" onclick="showTweet('{{tweet.twitter_username}}-{{tweet.tweet_id}}');" id="{{tweet.twitter_username}}-{{tweet.tweet_id}}-text">Show Tweet</a>
+            <div style="display:none" id="{{tweet.twitter_username}}-{{tweet.tweet_id}}">
+                <blockquote class="twitter-tweet">
+                    <a href="https://twitter.com/x/status/{{tweet.tweet_id}}"></a>
+                </blockquote>
+            </div>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% if is_paginated %}
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+      <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in paginator.page_range %}
+      {% if page_obj.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+      <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}
+</div>
 
     <div class="container">
     <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
@@ -48,29 +100,5 @@
             }
         </script>
     </div>
-
-{% for contact in page_obj %}
-    {# Each "contact" is a Contact model object. #}
-    {{ contact.full_name|upper }}<br>
-    ...
-{% endfor %}
-
-<div class="pagination">
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-        {% endif %}
-
-        <span class="current">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-        </span>
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-        {% endif %}
-    </span>
-</div>
 
 {% endblock %}
