@@ -1,3 +1,4 @@
+from math import ceil
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
@@ -196,6 +197,7 @@ class ScoredTweetsListView(ListView):
             )
         ).order_by("twitter_username", "-toxicity_score")
         context['tweets'] = tweets
+        context['max_pages'] = ceil(len(tweets) / self.paginate_by)
         return context
 
     def get_queryset(self):

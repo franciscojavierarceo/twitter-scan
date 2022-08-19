@@ -63,8 +63,8 @@
             <a class="page-link" href="?page={{ page_obj.number|add:'5' }}">&hellip;</a>
         </li>
         <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.paginator.count }}">
-                {{ page_obj.paginator.count }}
+            <a class="page-link" href="?page={{ max_pages }}">
+                {{ max_pages }}
             </a>
         </li>
     {% endif %}
