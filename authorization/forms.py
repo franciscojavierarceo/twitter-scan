@@ -16,7 +16,7 @@ class TwitterUsernameForm(forms.ModelForm):
         ]
         labels = [""]
 
-    def clean_twitterusername(self):
+    def clean(self):
         exclude_list = [
             "franciscojarceo",
             "mlevchin",

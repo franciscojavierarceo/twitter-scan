@@ -120,6 +120,7 @@ def index(request):
         dtz = timezone.now()
         curr_user = TwitterUser.objects.get(user=request.user)
         tuser = request.POST.get("twitter_username", None)
+        print(tuser)
         db_recs = TwitterUserSearched.objects.filter(
             twitter_username=tuser,
             submitter_user=curr_user,
@@ -130,7 +131,6 @@ def index(request):
                 db_rec = db_recs.last()
                 db_rec.updated_date = dtz
                 db_rec.save()
-                return redirect("thankyou")
             else:
                 print("no records found")
                 model_saved = form.save()
@@ -145,7 +145,9 @@ def index(request):
                     print("...task scheduled")
                 except Exception as e:
                     print(f"celery task failed {e}")
-                return redirect("thankyou")
+            return redirect("thankyou")
+        else:
+            form = TwitterUsernameForm()
     else:
         form = TwitterUsernameForm()
 
