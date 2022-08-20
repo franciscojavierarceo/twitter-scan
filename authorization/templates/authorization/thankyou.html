@@ -1,8 +1,15 @@
 {% extends "authorization/base.html" %}
 
 {% block maincontent %}
-  <p class="lead mb-4">It could take a bit to process and score all of those
-  tweets, so feel free to check back later.</p>
-  <p>You can see the users you've searched
+<p class="lead mb-4">Thanks for using Tweet Scanner!</p>
+  <p >It could take a bit to process and score all of those
+  tweets, so feel free to check back later.<br>You can see the users you've searched
   for <a href="{% url 'user_search_history' %}">here</a>.</p>
+
+  	<script type="text/javascript">
+        window.setTimeout(function(){
+			var success_url = "{% url 'user_search_history' %}"
+			window.location.replace(success_url)
+		}, 10000);
+    </script>
 {% endblock %}
