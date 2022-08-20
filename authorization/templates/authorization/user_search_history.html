@@ -1,0 +1,17 @@
+{% extends "authorization/base.html" %}
+
+{% block maincontent %}
+
+<p class="lead mb-4">Here's a list of the twitter users you've searched, select whose tweets you want to see.</p>
+
+<div class="container">
+    <ul class="list">
+    {% for twitter_user in object_list %}
+        <li class="list-group-item">
+            <a href="{% url 'tu_result_list' tuid=twitter_user.pk%}">{{ twitter_user.twitter_username }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}

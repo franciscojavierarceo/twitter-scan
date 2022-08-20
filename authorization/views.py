@@ -5,7 +5,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.http import JsonResponse
-from django.views.generic import ListView
+from django.views.generic.base import TemplateView
+from django.views.generic import ListView, DetailView
+from django.views.generic.list import MultipleObjectMixin
 from django.utils.decorators import method_decorator
 
 from twitter_api.twitter_api import TwitterAPI
@@ -128,7 +130,7 @@ def index(request):
                 db_rec = db_recs.last()
                 db_rec.updated_date = dtz
                 db_rec.save()
-                return redirect("result_list")
+                return redirect("thankyou")
             else:
                 print("no records found")
                 model_saved = form.save()
@@ -143,7 +145,7 @@ def index(request):
                     print("...task scheduled")
                 except Exception as e:
                     print(f"celery task failed {e}")
-                return redirect("result_list")
+                return redirect("thankyou")
     else:
         form = TwitterUsernameForm()
 
@@ -155,61 +157,41 @@ def twitter_logout(request):
     logout(request)
     return redirect("index")
 
-
-@login_required
-def results(request):
-    curr_user = TwitterUser.objects.get(user=request.user)
-    results = TwitterUserSearched.objects.filter(
-        submitter_user=curr_user,
-    )
-
-    tweets = Tweet.objects.filter(
-        twitter_username__in=results.values_list("twitter_username", flat=True)
-    ).order_by("twitter_username", "-toxicity_score")
-
-    return render(
-        request, "authorization/results.html", {"results": results, "tweets": tweets}
-    )
-
-
 def score_tweets_api(request):
     tweets = request.POST.getlist("tweets")
     predictions = score_tweets(tweets)
     return JsonResponse({"predictions": predictions})
 
+@method_decorator(login_required, name='dispatch')
+class SearchedTwitterUsersListView(ListView):
+    model = TwitterUserSearched
+    template_name = 'authorization/user_search_history.html'
 
 @method_decorator(login_required, name='dispatch')
-class ScoredTweetsListView(ListView):
+class SearchedTweetsDetailView(DetailView, MultipleObjectMixin):
     paginate_by = 10
     model = Tweet
+    slug_url_kwarg = "tuid"
     template_name = 'authorization/list_results.html'
+    context_object_name = 'object_list'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    def get_object(self, queryset=None):
+        tuid = self.kwargs.get('tuid', None)
         curr_user = TwitterUser.objects.get(user=self.request.user)
-        results = TwitterUserSearched.objects.filter(
-            submitter_user=curr_user,
-        )
+        searched_user = TwitterUserSearched.objects.get(pk=tuid)
         tweets = Tweet.objects.filter(
-            twitter_username__in=results.values_list(
-                "twitter_username",
-                flat=True
-            )
-        ).order_by("twitter_username", "-toxicity_score")
-        context['tweets'] = tweets
-        context['max_pages'] = ceil(len(tweets) / self.paginate_by)
-        return context
-
-    def get_queryset(self):
-        curr_user = TwitterUser.objects.get(user=self.request.user)
-        results = TwitterUserSearched.objects.filter(
-            submitter_user=curr_user,
-        )
-        tweets = Tweet.objects.filter(
-            twitter_username__in=results.values_list(
-                "twitter_username",
-                flat=True
-            )
+            twitter_username=searched_user.twitter_username,
         ).order_by("twitter_username", "-toxicity_score")
         return tweets
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        total_tweets = context['paginator'].object_list.count()
+        context['max_pages'] = ceil(total_tweets / self.paginate_by)
+        return context
+
+
+
+@method_decorator(login_required, name='dispatch')
+class ThankYouView(TemplateView):
+    template_name = "authorization/thankyou.html"

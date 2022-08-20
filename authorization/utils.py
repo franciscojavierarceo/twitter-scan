@@ -30,7 +30,7 @@ INTERNAL_MODEL_ENDPOINT = os.environ.get("INTERNAL_MODEL_ENDPOINT")
 def get_score_save_historical_tweets(
     screen_name: str, n_tweets: int = 20, debug: bool = False
 ) -> None:
-    
+
     print(f"getting historical tweets for {screen_name}...")
     if not screen_name:
         print("get_score_save_historical_tweets dummy task worked")
