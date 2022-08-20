@@ -30,16 +30,18 @@ INTERNAL_MODEL_ENDPOINT = os.environ.get("INTERNAL_MODEL_ENDPOINT")
 def get_score_save_historical_tweets(
     screen_name: str, n_tweets: int = 20, debug: bool = False
 ) -> None:
+    
     print(f"getting historical tweets for {screen_name}...")
     if not screen_name:
-        print("get_score_save_historical_tweets task call worked")
+        print("get_score_save_historical_tweets dummy task worked")
         return None
 
     # make initial request for most recent tweets (200 is the maximum allowed count)
     new_tweets = twitter_api.user_timeline(screen_name=screen_name, count=n_tweets)
     tweet_counter: int = len(new_tweets)
+    total_tweets = new_tweets[0]._json['user']['statuses_count']
 
-    print(f"retrieved {tweet_counter} tweets for {screen_name}...")
+    print(f"retrieved {tweet_counter} of {total_tweets} tweets for {screen_name}...")
     # keep grabbing tweets until there are no tweets left to grab
 
     while len(new_tweets) > 0:
