@@ -16,14 +16,21 @@ class TwitterUsernameForm(forms.ModelForm):
         ]
         labels = [""]
 
-    def clean(self):
+    def clean_twitter_username(self):
         exclude_list = [
             "franciscojarceo",
             "mlevchin",
             "affirm",
         ]
-        cleaned_data = super(TwitterUsernameForm, self).clean()
-        data = cleaned_data.get("twitter_username")
+        data = self.cleaned_data.get("twitter_username")
         if data in exclude_list:
             raise ValidationError("sorry that's not allowed!")
         return data
+
+    def clean(self):
+        cleaned_data = super().clean()
+        twitter_username = cleaned_data.get('twitter_username')
+
+        return cleaned_data  
+
+
