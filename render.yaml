@@ -24,6 +24,8 @@ services:
           name: celery-redis
           type: redis
           property: connectionString
+      - key: INTERNAL_MODEL_ENDPOINT
+        value: https://tweetscanner.onrender.com/score-tweets/
   - type: worker
     name: queue
     region: oregon 
