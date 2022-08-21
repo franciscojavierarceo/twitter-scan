@@ -173,6 +173,10 @@ class SearchedTwitterUsersListView(ListView):
     model = TwitterUserSearched
     template_name = "authorization/user_search_history.html"
 
+    def get_queryset(self):
+        curr_user = TwitterUser.objects.get(user=self.request.user)
+        return TwitterUserSearched.objects.filter(submitter_user=curr_user)
+
 
 @method_decorator(login_required, name="dispatch")
 class SearchedTweetsDetailView(DetailView, MultipleObjectMixin):
@@ -185,7 +189,10 @@ class SearchedTweetsDetailView(DetailView, MultipleObjectMixin):
     def get_object(self, queryset=None):
         tuid = self.kwargs.get("tuid", None)
         curr_user = TwitterUser.objects.get(user=self.request.user)
-        searched_user = TwitterUserSearched.objects.get(pk=tuid)
+        searched_user = TwitterUserSearched.objects.get(
+            pk=tuid,
+            submitter_user=curr_user,
+        )
         tweets = Tweet.objects.filter(
             twitter_username=searched_user.twitter_username,
         ).order_by("twitter_username", "-toxicity_score")
