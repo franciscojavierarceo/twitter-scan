@@ -201,3 +201,12 @@ class SearchedTweetsDetailView(DetailView, MultipleObjectMixin):
 @method_decorator(login_required, name="dispatch")
 class ThankYouView(TemplateView):
     template_name = "authorization/thankyou.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        curr_user = TwitterUser.objects.get(user=self.request.user)
+        searched_user = TwitterUserSearched.objects.filter(
+            submitter_user=curr_user
+        ).latest('created_date')
+        context["searched_user"] = searched_user.twitter_username
+        return context

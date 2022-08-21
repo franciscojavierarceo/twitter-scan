@@ -19,12 +19,11 @@ model = Detoxify("original-small")
 test_prediction = model.predict("this is running the model at buildtime")
 print(f"running build-time prediction: {test_prediction}")
 
+INTERNAL_MODEL_ENDPOINT = os.environ.get("INTERNAL_MODEL_ENDPOINT")
 TWITTER_API_KEY = os.environ.get("TWITTER_API_KEY")
 TWITTER_API_SECRET = os.environ.get("TWITTER_API_SECRET")
 auth = tweepy.OAuthHandler(TWITTER_API_KEY, TWITTER_API_SECRET)
 twitter_api = tweepy.API(auth)
-
-INTERNAL_MODEL_ENDPOINT = os.environ.get("INTERNAL_MODEL_ENDPOINT")
 
 
 def get_score_save_historical_tweets(

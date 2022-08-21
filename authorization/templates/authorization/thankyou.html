@@ -1,15 +1,22 @@
 {% extends "authorization/base.html" %}
 
 {% block maincontent %}
-<p class="lead mb-4">Thanks for using Tweet Scanner!</p>
-  <p >It could take a bit to process and score all of those
+<p class="lead mb-4">
+You searched for <a href="https://twitter.com/{{ searched_user}}">@{{ searched_user }}</a>.
+</p>
+
+<p>
+It could take a bit to process and score all of those
   tweets, so feel free to check back later.<br>You can see the users you've searched
-  for <a href="{% url 'user_search_history' %}">here</a>.</p>
+  for <a href="{% url 'user_search_history' %}">here</a>.
+  You'll be redirected there in a second either way. 🤠
+</p>
 
   	<script type="text/javascript">
         window.setTimeout(function(){
 			var success_url = "{% url 'user_search_history' %}"
 			window.location.replace(success_url)
-		}, 10000);
+		}, 9000);
     </script>
+
 {% endblock %}
