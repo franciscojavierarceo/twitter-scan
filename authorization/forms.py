@@ -31,6 +31,6 @@ class TwitterUsernameForm(forms.ModelForm):
         cleaned_data = super().clean()
         twitter_username = cleaned_data.get('twitter_username')
 
-        return cleaned_data  
+        return cleaned_data
 
 

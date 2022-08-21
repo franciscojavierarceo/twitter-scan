@@ -114,6 +114,7 @@ def twitter_callback(request):
 @login_required
 @twitter_login_required
 def index(request):
+    context = {}
     if request.method == "POST":
         form = TwitterUsernameForm(request.POST)
         print(f"form valid = {form.is_valid()}")
@@ -147,11 +148,12 @@ def index(request):
                     print(f"celery task failed {e}")
             return redirect("thankyou")
         else:
-            form = TwitterUsernameForm()
+            context['form_errors'] = form.errors
     else:
         form = TwitterUsernameForm()
 
-    return render(request, "authorization/index.html", {"form": form})
+    context['form'] = form
+    return render(request, "authorization/index.html", context)
 
 
 @login_required
