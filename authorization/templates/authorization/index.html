@@ -1,13 +1,13 @@
 {% extends "authorization/base.html" %}
+{% load crispy_forms_tags %}
 
 {% block maincontent %}
     <div class="col-lg-6 mx-auto">
         <p class="lead mb-4">Enter the Twitter Username you want to scan!</p>
         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-        {% load crispy_forms_tags %}
         <form method="post">
           {% csrf_token %}
-              {{form|crispy}}
+          {{ form|crispy }}
             <input type="submit" class="btn btn-lg btn-outline-primary justify-content-center" value="Scan the Twitters">
           </form>
         </div>
