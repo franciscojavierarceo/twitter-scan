@@ -148,11 +148,11 @@ def index(request):
                     print(f"celery task failed {e}")
             return redirect("thankyou")
         else:
-            context['form_errors'] = form.errors
+            context["form_errors"] = form.errors
     else:
         form = TwitterUsernameForm()
 
-    context['form'] = form
+    context["form"] = form
     return render(request, "authorization/index.html", context)
 
 
@@ -161,26 +161,29 @@ def twitter_logout(request):
     logout(request)
     return redirect("index")
 
+
 def score_tweets_api(request):
     tweets = request.POST.getlist("tweets")
     predictions = score_tweets(tweets)
     return JsonResponse({"predictions": predictions})
 
-@method_decorator(login_required, name='dispatch')
+
+@method_decorator(login_required, name="dispatch")
 class SearchedTwitterUsersListView(ListView):
     model = TwitterUserSearched
-    template_name = 'authorization/user_search_history.html'
+    template_name = "authorization/user_search_history.html"
 
-@method_decorator(login_required, name='dispatch')
+
+@method_decorator(login_required, name="dispatch")
 class SearchedTweetsDetailView(DetailView, MultipleObjectMixin):
     paginate_by = 10
     model = Tweet
     slug_url_kwarg = "tuid"
-    template_name = 'authorization/list_results.html'
-    context_object_name = 'object_list'
+    template_name = "authorization/list_results.html"
+    context_object_name = "object_list"
 
     def get_object(self, queryset=None):
-        tuid = self.kwargs.get('tuid', None)
+        tuid = self.kwargs.get("tuid", None)
         curr_user = TwitterUser.objects.get(user=self.request.user)
         searched_user = TwitterUserSearched.objects.get(pk=tuid)
         tweets = Tweet.objects.filter(
@@ -190,12 +193,11 @@ class SearchedTweetsDetailView(DetailView, MultipleObjectMixin):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        total_tweets = context['paginator'].object_list.count()
-        context['max_pages'] = ceil(total_tweets / self.paginate_by)
+        total_tweets = context["paginator"].object_list.count()
+        context["max_pages"] = ceil(total_tweets / self.paginate_by)
         return context
 
 
-
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class ThankYouView(TemplateView):
     template_name = "authorization/thankyou.html"
