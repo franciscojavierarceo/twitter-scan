@@ -23,7 +23,7 @@ class TwitterUsernameForm(forms.ModelForm):
             "affirm",
         ]
         data = self.cleaned_data.get("twitter_username")
-        data = data.strip().replace("@", "").lower()
+        data = data.replace("@", "").lower().strip()
         if data in exclude_list:
             raise ValidationError("sorry that's not allowed!")
         return data
