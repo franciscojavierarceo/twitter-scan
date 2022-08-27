@@ -214,6 +214,11 @@ class ThankYouView(TemplateView):
         curr_user = TwitterUser.objects.get(user=self.request.user)
         searched_user = TwitterUserSearched.objects.filter(
             submitter_user=curr_user
-        ).latest('created_date')
+        ).latest("created_date")
         context["searched_user"] = searched_user.twitter_username
         return context
+
+
+@method_decorator(login_required, name="dispatch")
+class RealTimeScoreView(TemplateView):
+    template_name = "authorization/realtime.html"

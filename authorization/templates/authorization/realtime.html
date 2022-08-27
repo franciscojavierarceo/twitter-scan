@@ -1,0 +1,13 @@
+{% extends "authorization/base.html" %}
+
+{% block maincontent %}
+<link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
+<script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+
+<p class="lead mb-4">
+Try submitting text to see if it's toxic.
+</p>
+
+<py-script> import torch;</py-script>
+
+{% endblock %}

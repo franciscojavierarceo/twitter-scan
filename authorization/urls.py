@@ -19,4 +19,5 @@ urlpatterns = [
     ),
     path("score-tweets/", csrf_exempt(views.score_tweets_api), name="score_tweets"),
     path("thankyou/", csrf_exempt(views.ThankYouView.as_view()), name="thankyou"),
+    path("realtime/", csrf_exempt(views.RealTimeScoreView.as_view()), name="realtime"),
 ]
