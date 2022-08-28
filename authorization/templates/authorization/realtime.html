@@ -3,11 +3,33 @@
 {% block maincontent %}
 <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
 <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+<py-env>
+    - numpy
+    - matplotlib
+    - sklearn
+</py-env>
 
 <p class="lead mb-4">
 Try submitting text to see if it's toxic.
 </p>
 
-<py-script> import torch;</py-script>
+    <h1>Let's plot random numbers</h1>
+    <div id="plot"></div>
+    <py-script output="plot">
+import numpy as np
+import matplotlib.pyplot as plt
+
+def make_x_and_y(n):
+    x = np.random.randn(n)
+    y = np.random.randn(n)
+    return x, y
+
+x, y = make_x_and_y(n=1000)
+fig, ax = plt.subplots()
+ax.scatter(x, y)
+fig
+    </py-script>
+
+    {% comment %}<py-script> import torch;print(torch.__version__)</py-script> {% endcomment %}
 
 {% endblock %}

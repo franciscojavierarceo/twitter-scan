@@ -21,6 +21,11 @@ from .utils import (
     score_tweets,
 )
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializers import TextScoringSerializer
+from rest_framework.viewsets import ReadOnlyModelViewSet
+
 fetch_and_store_historical_tweets.delay(None)
 
 
@@ -222,3 +227,7 @@ class ThankYouView(TemplateView):
 @method_decorator(login_required, name="dispatch")
 class RealTimeScoreView(TemplateView):
     template_name = "authorization/realtime.html"
+
+class RealTimeScoringView(ReadOnlyModelViewSet):
+    queryset = Tweet.objects.all()
+    serializer_class = TextScoringSerializer

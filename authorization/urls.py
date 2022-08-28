@@ -1,6 +1,8 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from django.views.decorators.csrf import csrf_exempt
+
+
 
 urlpatterns = [
     path("", views.index, name="index"),
@@ -20,4 +22,5 @@ urlpatterns = [
     path("score-tweets/", csrf_exempt(views.score_tweets_api), name="score_tweets"),
     path("thankyou/", csrf_exempt(views.ThankYouView.as_view()), name="thankyou"),
     path("realtime/", csrf_exempt(views.RealTimeScoreView.as_view()), name="realtime"),
+    #path("realtime-2/", csrf_exempt(views.RealTimeScoringView.as_view()), name="realtime-2"),
 ]

@@ -285,6 +285,18 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "djangorestframework"
+version = "3.13.1"
+description = "Web APIs for Django, made easy."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+django = ">=2.2"
+pytz = "*"
+
+[[package]]
 name = "filelock"
 version = "3.7.1"
 description = "A platform independent file lock."
@@ -815,7 +827,7 @@ docs = ["rst.linker (>=1.9)", "jaraco.packaging (>=9)", "sphinx"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "c458b4eb169f5d2edc414a4d9b6e310f1629e3b93e3e2bbc4e4e72f623ec32d3"
+content-hash = "0df3639fd3cf67fadd9a60d9fdf67d18b846ca8e217b34f213317d3e9dd6745d"
 
 [metadata.files]
 amqp = []
@@ -840,6 +852,7 @@ detoxify = []
 dj-database-url = []
 django = []
 django-crispy-forms = []
+djangorestframework = []
 filelock = []
 gunicorn = []
 huggingface-hub = []

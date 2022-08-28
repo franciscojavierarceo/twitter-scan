@@ -17,6 +17,7 @@ crispy-bootstrap5 = "^0.6"
 celery = "^5.2.7"
 redis = "^4.3.4"
 pytest-django = "^4.5.2"
+djangorestframework = "^3.13.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
