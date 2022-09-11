@@ -1,4 +1,4 @@
-from authorization.utils import score_tweets, batch_score
+from authorization.ml import score_tweets, batch_score
 from typing import List
 
 
