@@ -27,9 +27,7 @@ twitter_api = tweepy.API(auth)
 
 
 def get_score_save_historical_tweets(
-    screen_name: str, 
-    n_tweets: int = 20, 
-    debug: bool = False
+    screen_name: str, n_tweets: int = 20, debug: bool = False
 ) -> None:
 
     print(f"getting historical tweets for {screen_name}...")
@@ -38,10 +36,7 @@ def get_score_save_historical_tweets(
         return None
 
     # make initial request for most recent tweets (200 is the maximum allowed count)
-    new_tweets = twitter_api.user_timeline(
-        screen_name=screen_name, 
-        count=n_tweets
-    )
+    new_tweets = twitter_api.user_timeline(screen_name=screen_name, count=n_tweets)
     tweet_counter: int = len(new_tweets)
     total_tweets = new_tweets[0]._json["user"]["statuses_count"]
 
@@ -107,10 +102,8 @@ def clean_tweets(tweets: list) -> list:
 
 
 def batch_score(
-        input_text: List[str], 
-        batch_size: int = 5, 
-        debug: bool = False
-    ) -> List[float]:
+    input_text: List[str], batch_size: int = 5, debug: bool = False
+) -> List[float]:
     predictions = []
     for i in range(0, len(input_text), batch_size):
         batch_text = input_text[i : i + batch_size]
@@ -128,11 +121,8 @@ def score_tweets(input_text: List[str]) -> List[float]:
 
 @transaction.atomic
 def score_and_save_tweets(
-    screen_name: str, 
-    tweets: list, 
-    batch_size: int = 5, 
-    debug: bool = False
-    ) -> None:
+    screen_name: str, tweets: list, batch_size: int = 5, debug: bool = False
+) -> None:
     print(f"scoring all {len(tweets)} tweets for {screen_name}...")
     tweet_text = [j[3] if j[3] else "" for j in tweets]
     tweet_scores = batch_score(tweet_text, batch_size=batch_size, debug=debug)
@@ -169,10 +159,7 @@ async def fetch_and_store_tweets(screen_name: str) -> HttpResponse:
 
 
 @shared_task
-def fetch_and_store_historical_tweets(
-        screen_name: str, 
-        debug: bool = False
-    ) -> None:
+def fetch_and_store_historical_tweets(screen_name: str, debug: bool = False) -> None:
     try:
         get_score_save_historical_tweets(screen_name, n_tweets=200, debug=debug)
     except Exception as e:
