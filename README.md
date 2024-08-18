@@ -3,7 +3,7 @@
 This repository is a web app that allows you to scan a 
 user's tweets to see how "toxi" they are according to an open source model.
 
-I [wrote about it in more detail here](https://www.chaos-engineering.dev/p/building-an-ai-to-scan-toxic-tweets).
+[I wrote about it in more detail in this article](https://www.chaos-engineering.dev/p/building-an-ai-to-scan-toxic-tweets).
 
 # Render App
 
